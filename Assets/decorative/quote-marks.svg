@@ -1,0 +1,16 @@
+<svg viewBox="0 0 80 60" xmlns="http://www.w3.org/2000/svg" width="80" height="60">
+  <!--
+    Large decorative opening quotation marks.
+    Serif-inspired, gold #D4AF37, opacity 0.3.
+    Used as decorative overlay behind testimonial text.
+  -->
+  <text
+    x="-4"
+    y="56"
+    font-family="Georgia, 'Times New Roman', Times, serif"
+    font-size="78"
+    font-weight="400"
+    fill="#D4AF37"
+    opacity="0.3"
+    letter-spacing="-4">“</text>
+</svg>

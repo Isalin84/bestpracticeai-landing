@@ -1,0 +1,198 @@
+@import "tailwindcss";
+
+:root {
+  --bp-dark-blue: #0B1D3A;
+  --bp-gold: #D4AF37;
+  --bp-steel-blue: #1E3A5F;
+  --bp-beige: #F5DEB3;
+  --bp-light-bg: #FAF9F6;
+  --bp-medium-gold: #C4A032;
+  --bp-soft-gold: #E8D48B;
+  --bp-light-steel: #2A4F7A;
+  --bp-text-dark: #1a1a1a;
+  --bp-text-light: #FAF9F6;
+  --bp-font-heading: 'Montserrat', sans-serif;
+  --bp-font-body: 'Lora', serif;
+  --bp-font-ui: 'Inter', 'Montserrat', sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--bp-font-body);
+  color: var(--bp-text-dark);
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--bp-font-heading);
+}
+
+/* Marquee */
+.marquee-track {
+  background: var(--bp-gold);
+  height: 44px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+.marquee-content {
+  display: flex;
+  animation: marquee 40s linear infinite;
+  white-space: nowrap;
+  gap: 0;
+}
+.marquee-track:hover .marquee-content {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-33.333%); }
+}
+
+/* Buttons */
+.btn-primary {
+  background: var(--bp-gold);
+  color: var(--bp-dark-blue);
+  font-family: var(--bp-font-heading);
+  font-weight: 700;
+  font-size: 16px;
+  padding: 14px 36px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  line-height: 1;
+}
+.btn-primary:hover {
+  background: var(--bp-medium-gold);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--bp-dark-blue);
+  border: 2px solid var(--bp-dark-blue);
+  font-family: var(--bp-font-heading);
+  font-weight: 600;
+  font-size: 16px;
+  padding: 12px 34px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  line-height: 1;
+}
+.btn-secondary:hover {
+  background: var(--bp-dark-blue);
+  color: var(--bp-gold);
+}
+
+.btn-primary-outline {
+  background: transparent;
+  color: var(--bp-gold);
+  border: 2px solid var(--bp-gold);
+  font-family: var(--bp-font-heading);
+  font-weight: 600;
+  font-size: 16px;
+  padding: 12px 34px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  line-height: 1;
+}
+.btn-primary-outline:hover {
+  background: var(--bp-gold);
+  color: var(--bp-dark-blue);
+}
+
+/* Service card hover */
+.service-card {
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  border: 2px solid transparent;
+}
+.service-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--bp-gold);
+  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.15);
+}
+
+/* Review carousel */
+.reviews-carousel {
+  overflow: hidden;
+}
+
+/* Admin sidebar */
+.admin-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  color: #cbd5e1;
+  font-family: var(--bp-font-heading);
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.admin-nav-item:hover,
+.admin-nav-item.active {
+  background: rgba(212, 175, 55, 0.15);
+  color: var(--bp-gold);
+}
+
+/* Prose for markdown */
+.prose-bp h1, .prose-bp h2, .prose-bp h3 {
+  font-family: var(--bp-font-heading);
+  color: var(--bp-dark-blue);
+  margin-bottom: 0.75em;
+  margin-top: 1.5em;
+}
+.prose-bp p {
+  font-family: var(--bp-font-body);
+  line-height: 1.75;
+  margin-bottom: 1em;
+  color: #374151;
+}
+.prose-bp ul, .prose-bp ol {
+  padding-left: 1.5em;
+  margin-bottom: 1em;
+}
+.prose-bp li {
+  font-family: var(--bp-font-body);
+  line-height: 1.75;
+  color: #374151;
+  margin-bottom: 0.25em;
+}
+.prose-bp a {
+  color: var(--bp-gold);
+  text-decoration: underline;
+}
+.prose-bp blockquote {
+  border-left: 4px solid var(--bp-gold);
+  padding-left: 1em;
+  font-style: italic;
+  color: #6b7280;
+}

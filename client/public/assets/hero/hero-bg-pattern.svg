@@ -1,0 +1,93 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" width="800" height="600">
+  <defs>
+    <style>
+      .cs { fill: none; stroke: #1E3A5F; stroke-width: 1; }
+      .hs { fill: none; stroke: #0B1D3A; stroke-width: 0.8; }
+      .rl { stroke: #1E3A5F; stroke-width: 0.5; fill: none; }
+    </style>
+  </defs>
+
+  <!-- === CONCENTRIC CIRCLES centered off-canvas right (cx=840) === -->
+  <circle class="cs" cx="840" cy="300" r="170" opacity="0.14"/>
+  <circle class="cs" cx="840" cy="300" r="260" opacity="0.12"/>
+  <circle class="cs" cx="840" cy="300" r="370" opacity="0.09"/>
+  <circle class="cs" cx="840" cy="300" r="490" opacity="0.07"/>
+
+  <!-- Subtle radial lines from circle center -->
+  <line class="rl" x1="840" y1="300" x2="260" y2="60"  opacity="0.07"/>
+  <line class="rl" x1="840" y1="300" x2="400" y2="0"   opacity="0.05"/>
+  <line class="rl" x1="840" y1="300" x2="400" y2="600" opacity="0.05"/>
+  <line class="rl" x1="840" y1="300" x2="260" y2="540" opacity="0.07"/>
+  <line class="rl" x1="840" y1="300" x2="80"  y2="300" opacity="0.05"/>
+
+  <!-- === HEXAGONS scattered === -->
+  <!-- top-left area -->
+  <polygon class="hs" opacity="0.07" points="55,52 78,39 101,52 101,78 78,91 55,78"/>
+  <polygon class="hs" opacity="0.05" points="128,12 154,−2 180,12 180,40 154,54 128,40"/>
+  <polygon class="hs" opacity="0.06" points="22,148 50,132 78,148 78,180 50,196 22,180"/>
+
+  <!-- mid-left -->
+  <polygon class="hs" opacity="0.07" points="44,280 76,262 108,280 108,316 76,334 44,316"/>
+  <polygon class="hs" opacity="0.05" points="148,338 172,324 196,338 196,366 172,380 148,366"/>
+
+  <!-- bottom-left -->
+  <polygon class="hs" opacity="0.06" points="68,472 98,455 128,472 128,506 98,523 68,506"/>
+  <polygon class="hs" opacity="0.05" points="196,526 220,512 244,526 244,554 220,568 196,554"/>
+  <polygon class="hs" opacity="0.06" points="22,556 48,541 74,556 74,586 48,601 22,586"/>
+
+  <!-- mid-canvas -->
+  <polygon class="hs" opacity="0.05" points="316,104 340,90 364,104 364,132 340,146 316,132"/>
+  <polygon class="hs" opacity="0.06" points="416,192 444,176 472,192 472,224 444,240 416,224"/>
+  <polygon class="hs" opacity="0.05" points="274,394 302,378 330,394 330,426 302,442 274,426"/>
+  <polygon class="hs" opacity="0.06" points="494,452 520,437 546,452 546,480 520,495 494,480"/>
+
+  <!-- right side -->
+  <polygon class="hs" opacity="0.05" points="648,72 678,55 708,72 708,106 678,123 648,106"/>
+  <polygon class="hs" opacity="0.05" points="696,374 726,357 756,374 756,408 726,425 696,408"/>
+  <polygon class="hs" opacity="0.04" points="738,516 762,502 786,516 786,544 762,558 738,544"/>
+
+  <!-- tiny accent hexagons -->
+  <polygon class="hs" opacity="0.05" points="200,200 216,191 232,200 232,218 216,227 200,218"/>
+  <polygon class="hs" opacity="0.04" points="560,130 574,122 588,130 588,146 574,154 560,146"/>
+  <polygon class="hs" opacity="0.04" points="580,470 594,462 608,470 608,486 594,494 580,486"/>
+
+  <!-- === GOLD DOTS at circle intersections and hexagon corners === -->
+  <!-- circle r=170 -->
+  <circle cx="670" cy="300" r="2.5" fill="#D4AF37" opacity="0.45"/>
+  <circle cx="726" cy="170" r="2.0" fill="#D4AF37" opacity="0.40"/>
+  <circle cx="726" cy="430" r="2.0" fill="#D4AF37" opacity="0.40"/>
+
+  <!-- circle r=260 -->
+  <circle cx="580" cy="300" r="2.5" fill="#D4AF37" opacity="0.38"/>
+  <circle cx="640" cy="88"  r="1.8" fill="#D4AF37" opacity="0.35"/>
+  <circle cx="640" cy="512" r="1.8" fill="#D4AF37" opacity="0.35"/>
+
+  <!-- circle r=370 -->
+  <circle cx="470" cy="300" r="2.0" fill="#D4AF37" opacity="0.33"/>
+  <circle cx="548" cy="36"  r="1.6" fill="#D4AF37" opacity="0.30"/>
+  <circle cx="548" cy="564" r="1.6" fill="#D4AF37" opacity="0.30"/>
+  <circle cx="516" cy="72"  r="1.4" fill="#D4AF37" opacity="0.28"/>
+  <circle cx="516" cy="528" r="1.4" fill="#D4AF37" opacity="0.28"/>
+
+  <!-- circle r=490 -->
+  <circle cx="350" cy="300" r="2.0" fill="#D4AF37" opacity="0.30"/>
+  <circle cx="420" cy="100" r="1.5" fill="#D4AF37" opacity="0.28"/>
+  <circle cx="420" cy="500" r="1.5" fill="#D4AF37" opacity="0.28"/>
+
+  <!-- radial line intersections with circles -->
+  <circle cx="584" cy="163" r="1.5" fill="#D4AF37" opacity="0.32"/>
+  <circle cx="584" cy="437" r="1.5" fill="#D4AF37" opacity="0.32"/>
+  <circle cx="468" cy="68"  r="1.4" fill="#D4AF37" opacity="0.28"/>
+  <circle cx="468" cy="532" r="1.4" fill="#D4AF37" opacity="0.28"/>
+
+  <!-- hexagon corner accents -->
+  <circle cx="78"  cy="91"  r="1.4" fill="#D4AF37" opacity="0.38"/>
+  <circle cx="76"  cy="334" r="1.4" fill="#D4AF37" opacity="0.38"/>
+  <circle cx="98"  cy="523" r="1.4" fill="#D4AF37" opacity="0.35"/>
+  <circle cx="340" cy="146" r="1.4" fill="#D4AF37" opacity="0.30"/>
+  <circle cx="444" cy="240" r="1.4" fill="#D4AF37" opacity="0.32"/>
+  <circle cx="302" cy="442" r="1.4" fill="#D4AF37" opacity="0.30"/>
+  <circle cx="520" cy="495" r="1.4" fill="#D4AF37" opacity="0.30"/>
+  <circle cx="678" cy="123" r="1.4" fill="#D4AF37" opacity="0.28"/>
+  <circle cx="726" cy="425" r="1.4" fill="#D4AF37" opacity="0.28"/>
+</svg>

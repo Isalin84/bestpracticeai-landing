@@ -1,0 +1,184 @@
+import { motion } from 'framer-motion'
+import { DeviceFrame } from '../ui/DeviceFrame'
+import { ParticleBackground } from '../ui/ParticleBackground'
+
+interface Props {
+  kinescopeId: string
+}
+
+export function Hero({ kinescopeId }: Props) {
+  const scrollToContacts = () => {
+    document.getElementById('contacts')?.scrollIntoView({ behavior: 'smooth' })
+  }
+  const scrollToServices = () => {
+    document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  return (
+    <section
+      id="home"
+      style={{
+        background: 'linear-gradient(135deg, var(--bp-dark-blue) 0%, var(--bp-steel-blue) 100%)',
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+        paddingTop: 72,
+      }}
+    >
+      {/* Particle animation */}
+      <ParticleBackground />
+
+      {/* Decorative SVG background */}
+      <img
+        src="/assets/hero/hero-bg-pattern.svg"
+        alt=""
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          right: -100,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          width: '60%',
+          maxWidth: 700,
+          opacity: 0.08,
+          pointerEvents: 'none',
+        }}
+      />
+
+      {/* Decorative gold dots */}
+      {[...Array(6)].map((_, i) => (
+        <div
+          key={i}
+          style={{
+            position: 'absolute',
+            width: 4,
+            height: 4,
+            borderRadius: '50%',
+            background: 'var(--bp-gold)',
+            opacity: 0.4,
+            left: `${15 + i * 12}%`,
+            top: `${20 + (i % 3) * 25}%`,
+          }}
+        />
+      ))}
+
+      <div
+        style={{
+          maxWidth: 1280,
+          margin: '0 auto',
+          padding: '80px 24px',
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: 64,
+          alignItems: 'center',
+          width: '100%',
+        }}
+        className="hero-grid"
+      >
+        {/* Left column */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: 'easeOut' }}
+        >
+          {/* Badge */}
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              background: 'rgba(212,175,55,0.15)',
+              border: '1px solid rgba(212,175,55,0.4)',
+              borderRadius: 100,
+              padding: '6px 16px',
+              marginBottom: 28,
+            }}
+          >
+            <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--bp-gold)' }} />
+            <span style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 600, fontSize: 12, color: 'var(--bp-gold)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              AI Студия · bestpracticeai.ru
+            </span>
+          </div>
+
+          <h1
+            style={{
+              fontFamily: 'var(--bp-font-heading)',
+              fontWeight: 700,
+              fontSize: 'clamp(36px, 5vw, 56px)',
+              color: '#fff',
+              lineHeight: 1.15,
+              marginBottom: 24,
+              letterSpacing: '-0.02em',
+            }}
+          >
+            Генеративные нейросети
+            <br />
+            <span style={{ color: 'var(--bp-gold)' }}>для бизнеса</span> и частных лиц
+          </h1>
+
+          <p
+            style={{
+              fontFamily: 'var(--bp-font-body)',
+              fontSize: 18,
+              color: 'rgba(250,249,246,0.8)',
+              lineHeight: 1.7,
+              marginBottom: 40,
+              maxWidth: 520,
+            }}
+          >
+            Создаём корпоративные ИИ-видео, обучаем работе с нейросетями и разрабатываем цифровые продукты.
+            Экспертиза × Искусственный интеллект × Результат.
+          </p>
+
+          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+            <button onClick={scrollToContacts} className="btn-primary">
+              Оставить заявку
+            </button>
+            <button onClick={scrollToServices} className="btn-primary-outline">
+              Смотреть услуги
+            </button>
+          </div>
+
+          {/* Trust indicators */}
+          <div style={{ display: 'flex', gap: 32, marginTop: 48, flexWrap: 'wrap' }}>
+            {[
+              { num: '500+', label: 'часов видео' },
+              { num: '2', label: 'федеральные премии' },
+              { num: '70%', label: 'экономия' },
+            ].map(item => (
+              <div key={item.label}>
+                <div style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 24, color: 'var(--bp-gold)' }}>
+                  {item.num}
+                </div>
+                <div style={{ fontFamily: 'var(--bp-font-body)', fontSize: 13, color: 'rgba(250,249,246,0.6)' }}>
+                  {item.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Right column */}
+        <motion.div
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7, delay: 0.2, ease: 'easeOut' }}
+          style={{ display: 'flex', justifyContent: 'center' }}
+        >
+          <DeviceFrame kinescopeId={kinescopeId} />
+        </motion.div>
+      </div>
+
+      <style>{`
+        @media (max-width: 900px) {
+          .hero-grid {
+            grid-template-columns: 1fr !important;
+            gap: 40px !important;
+          }
+        }
+      `}</style>
+    </section>
+  )
+}
