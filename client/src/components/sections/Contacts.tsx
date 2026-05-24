@@ -71,6 +71,14 @@ export function Contacts() {
                   ),
                   label: 'Email', value: 'salinivan@mail.ru', href: 'mailto:salinivan@mail.ru',
                 },
+                {
+                  icon: (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--bp-gold)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21.5 4.5L2.5 10.5l7 2.5m12-8.5-5 15-4.5-5.5m9.5-9.5-9.5 9.5m0 0L7.5 13"/>
+                    </svg>
+                  ),
+                  label: 'Telegram', value: '@isalin', href: 'https://t.me/isalin',
+                },
               ].map(item => (
                 <a
                   key={item.label}
@@ -95,7 +103,7 @@ export function Contacts() {
                   className="btn-primary"
                   style={{ padding: '10px 20px', fontSize: 14, justifyContent: 'center', flex: 1 }}
                 >
-                  Telegram
+                  Канал
                 </a>
                 <a
                   href="https://vk.com/club224447229"
