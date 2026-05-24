@@ -11,7 +11,7 @@ const STATS = [
 
 const WHY_CARDS = [
   {
-    icon: '/assets/icons/нейросеть.png',
+    icon: '/assets/icons/neiroset.png',
     title: 'Реальный опыт',
     text: 'Проведение тренингов и создание видео для крупных международных компаний.',
   },
@@ -194,9 +194,44 @@ export function About() {
                 <div style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 20, color: 'var(--bp-dark-blue)', marginBottom: 4 }}>
                   Иван Салин
                 </div>
-                <div style={{ fontFamily: 'var(--bp-font-body)', fontSize: 15, color: '#6b7280' }}>
-                  Основатель Best Practice AI · Эксперт по ИИ и промышленной безопасности
+                <div style={{ fontFamily: 'var(--bp-font-body)', fontSize: 15, color: '#6b7280', marginBottom: 20 }}>
+                  Основатель Best Practice
                 </div>
+                <div style={{ fontFamily: 'var(--bp-font-body)', fontSize: 13, color: '#9ca3af', marginBottom: 8 }}>
+                  Узнать больше об Иване
+                </div>
+                <a
+                  href="https://www.salinsafety.ru/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    fontFamily: 'var(--bp-font-heading)',
+                    fontWeight: 600,
+                    fontSize: 13,
+                    color: 'var(--bp-dark-blue)',
+                    textDecoration: 'none',
+                    border: '1.5px solid var(--bp-dark-blue)',
+                    borderRadius: 6,
+                    padding: '8px 18px',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLAnchorElement).style.background = 'var(--bp-dark-blue)'
+                    ;(e.currentTarget as HTMLAnchorElement).style.color = 'var(--bp-gold)'
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'
+                    ;(e.currentTarget as HTMLAnchorElement).style.color = 'var(--bp-dark-blue)'
+                  }}
+                >
+                  salinsafety.ru
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M1 11 L11 1 M11 1 H5 M11 1 V7" />
+                  </svg>
+                </a>
               </div>
             </div>
           </FadeInSection>
