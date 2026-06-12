@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast'
 import { Header } from './components/sections/Header'
 import { Footer } from './components/sections/Footer'
 import { CookieBanner } from './components/ui/CookieBanner'
+import { useYandexMetrika } from './hooks/useYandexMetrika'
 import { Home } from './pages/Home'
 import { NotFound } from './pages/NotFound'
 import { ArticlePage } from './pages/ArticlePage'
@@ -25,6 +26,7 @@ const Vibecoding = lazy(() => import('./pages/services/Vibecoding').then(m => ({
 const Additional = lazy(() => import('./pages/services/Additional').then(m => ({ default: m.Additional })))
 
 function PublicLayout() {
+  useYandexMetrika()
   return (
     <>
       <Header />
