@@ -4,7 +4,10 @@ import { Helmet } from 'react-helmet-async'
 export function NotFound() {
   return (
     <>
-      <Helmet><title>Страница не найдена — Best Practice AI</title></Helmet>
+      <Helmet>
+        <title>Страница не найдена — Best Practice AI</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
       <div style={{
         minHeight: '100vh',
         display: 'flex',

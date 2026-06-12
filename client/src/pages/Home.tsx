@@ -25,6 +25,7 @@ export function Home() {
       <Helmet>
         <title>Best Practice AI — Генеративные нейросети для бизнеса и частных лиц</title>
         <meta name="description" content="AI Студия Best Practice. Корпоративные ИИ-видео с кастомными аватарами, обучение работе с нейросетями, вайбкодинг." />
+        <link rel="canonical" href="https://bestpracticeai.ru/" />
       </Helmet>
       <Hero kinescopeId={kinescopeId} />
       <Marquee />

@@ -36,3 +36,7 @@ Thumbs.db
 
 # TypeScript cache
 *.tsbuildinfo
+
+# SQLite WAL/SHM (live data)
+*.db-shm
+*.db-wal

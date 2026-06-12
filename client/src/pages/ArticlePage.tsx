@@ -34,12 +34,37 @@ export function ArticlePage() {
   )
 
   const date = new Date(article.created_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
+  const canonical = `https://bestpracticeai.ru/blog/${article.slug}`
+  const ogImage = article.cover_url || 'https://bestpracticeai.ru/assets/og/OG.jpg'
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.title,
+    description: article.excerpt || undefined,
+    image: ogImage,
+    datePublished: new Date(article.created_at).toISOString(),
+    dateModified: new Date(article.updated_at || article.created_at).toISOString(),
+    mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+    author: { '@type': 'Person', name: 'Иван Салин', url: 'https://bestpracticeai.ru' },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Best Practice AI',
+      logo: { '@type': 'ImageObject', url: 'https://raw.githubusercontent.com/Isalin84/assets/main/media/LogoBP_YellowCircle.png' },
+    },
+  }
 
   return (
     <>
       <Helmet>
         <title>{article.title} — Best Practice AI</title>
         {article.excerpt && <meta name="description" content={article.excerpt} />}
+        <link rel="canonical" href={canonical} />
+        <meta property="og:title" content={`${article.title} — Best Practice AI`} />
+        {article.excerpt && <meta property="og:description" content={article.excerpt} />}
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:image" content={ogImage} />
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
       <div style={{ paddingTop: 96, minHeight: '100vh', background: 'var(--bp-light-bg)' }}>

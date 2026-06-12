@@ -9,6 +9,7 @@ import { reviewsRouter } from './routes/reviews.js'
 import { leadsRouter } from './routes/leads.js'
 import { portfolioRouter } from './routes/portfolio.js'
 import { settingsRouter } from './routes/settings.js'
+import { seoRouter } from './routes/seo.js'
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -42,6 +43,10 @@ app.use('/api/portfolio', portfolioRouter)
 app.use('/api/settings', settingsRouter)
 
 app.get('/health', (req, res) => res.json({ ok: true, env: process.env.NODE_ENV }))
+
+// SEO: sitemap.xml и HTML-страницы с мета-тегами для поисковых роботов
+// (nginx проксирует сюда все не-файловые запросы)
+app.use(seoRouter)
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`)

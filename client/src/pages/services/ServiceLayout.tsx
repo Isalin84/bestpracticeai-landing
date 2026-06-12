@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { motion } from 'framer-motion'
 
 const SERVICE_NAMES: Record<string, string> = {
@@ -24,6 +25,14 @@ export function ServiceLayout({ slug, heroTitle, heroSubtitle, ctaLabel = 'Ос�
 
   return (
     <div style={{ paddingTop: 72, minHeight: '100vh' }}>
+      <Helmet>
+        <title>{`${SERVICE_NAMES[slug] || heroTitle} — Best Practice AI`}</title>
+        <meta name="description" content={heroSubtitle} />
+        <link rel="canonical" href={`https://bestpracticeai.ru/services/${slug}`} />
+        <meta property="og:title" content={`${SERVICE_NAMES[slug] || heroTitle} — Best Practice AI`} />
+        <meta property="og:description" content={heroSubtitle} />
+        <meta property="og:url" content={`https://bestpracticeai.ru/services/${slug}`} />
+      </Helmet>
       {/* Breadcrumbs */}
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '20px 24px', display: 'flex', gap: 8, alignItems: 'center', fontFamily: 'var(--bp-font-body)', fontSize: 13, color: '#9ca3af' }}>
         <Link to="/" style={{ color: '#9ca3af', textDecoration: 'none' }}>Главная</Link>

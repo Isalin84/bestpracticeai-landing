@@ -5,6 +5,8 @@ export function PrivacyPage() {
     <>
       <Helmet>
         <title>Политика обработки персональных данных — Best Practice AI</title>
+        <meta name="description" content="Политика обработки персональных данных сайта bestpracticeai.ru в соответствии со 152-ФЗ." />
+        <link rel="canonical" href="https://bestpracticeai.ru/privacy" />
       </Helmet>
       <div style={{ paddingTop: 96, minHeight: '100vh', background: 'var(--bp-light-bg)' }}>
         <div style={{ maxWidth: 800, margin: '0 auto', padding: '48px 24px 96px' }}>

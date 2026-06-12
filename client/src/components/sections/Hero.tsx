@@ -27,6 +27,15 @@ export function Hero({ kinescopeId }: Props) {
         paddingTop: 72,
       }}
     >
+      {/* Aurora glow background */}
+      <div className="hero-aurora" aria-hidden="true">
+        <div className="hero-aurora__blob hero-aurora__blob--steel" />
+        <div className="hero-aurora__blob hero-aurora__blob--gold" />
+        <div className="hero-aurora__blob hero-aurora__blob--soft" />
+        <div className="hero-aurora__topline" />
+        <div className="hero-aurora__vignette" />
+      </div>
+
       {/* Particle animation */}
       <ParticleBackground />
 
