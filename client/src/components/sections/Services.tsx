@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { TiltCard } from '../ui/TiltCard'
+import { SectionSpotlight } from '../ui/SectionSpotlight'
 
 const SERVICES = [
   {
@@ -43,7 +45,9 @@ const CARD_WIDTH = 'calc(33.333% - 16px)'
 
 export function Services() {
   return (
-    <section id="services" style={{ background: 'var(--bp-dark-blue)', padding: '96px 0' }}>
+    <section id="services" style={{ background: 'var(--bp-dark-blue)', padding: '96px 0', position: 'relative' }}>
+      <div className="section-topline" aria-hidden="true" />
+      <SectionSpotlight />
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
 
         <motion.div
@@ -128,7 +132,8 @@ function ServiceCard({ service, index, cardWidth }: {
       style={{ flex: `0 0 ${cardWidth}`, minWidth: 0 }}
     >
       <Link to={`/services/${service.slug}`} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
-        <div className="service-card-inner">
+        <TiltCard style={{ height: '100%' }}>
+        <div className="service-card-inner" style={{ transformStyle: 'preserve-3d' }}>
           {/* Number + icon row */}
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
             <span style={{
@@ -147,6 +152,7 @@ function ServiceCard({ service, index, cardWidth }: {
               borderRadius: 14,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               flexShrink: 0,
+              transform: 'translateZ(28px)',
             }}>
               <img src={service.icon} alt={service.title} style={{ width: 40, height: 40, objectFit: 'contain' }} />
             </div>
@@ -189,6 +195,7 @@ function ServiceCard({ service, index, cardWidth }: {
             <span className="service-arrow">→</span>
           </div>
         </div>
+        </TiltCard>
       </Link>
     </motion.div>
   )

@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { api } from '../../api/client'
+import { SectionSpotlight } from '../ui/SectionSpotlight'
 import type { Review } from '../../types'
+
+const AUTOPLAY_MS = 7000
 
 function Monogram({ name }: { name: string }) {
   const initials = name.split(' ').slice(0, 2).map(w => w[0]).join('')
@@ -39,6 +42,7 @@ const PLACEHOLDER_REVIEWS: Review[] = [
 export function Reviews() {
   const [reviews, setReviews] = useState<Review[]>([])
   const [current, setCurrent] = useState(0)
+  const [paused, setPaused] = useState(false)
 
   useEffect(() => {
     api.getReviews()
@@ -49,12 +53,22 @@ export function Reviews() {
   const prev = () => setCurrent(c => (c - 1 + reviews.length) % reviews.length)
   const next = () => setCurrent(c => (c + 1) % reviews.length)
 
+  // Автопрокрутка: таймер перезапускается при ручной навигации (current в deps)
+  useEffect(() => {
+    if (reviews.length < 2 || paused) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const timer = setInterval(() => setCurrent(c => (c + 1) % reviews.length), AUTOPLAY_MS)
+    return () => clearInterval(timer)
+  }, [reviews.length, paused, current])
+
   if (reviews.length === 0) return null
 
   const review = reviews[current]
 
   return (
-    <section id="reviews" style={{ background: 'var(--bp-dark-blue)', padding: '96px 0' }}>
+    <section id="reviews" style={{ background: 'var(--bp-dark-blue)', padding: '96px 0', position: 'relative' }}>
+      <div className="section-topline" aria-hidden="true" />
+      <SectionSpotlight />
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
 
         <motion.div
@@ -72,7 +86,11 @@ export function Reviews() {
           </p>
         </motion.div>
 
-        <div style={{ maxWidth: 800, margin: '0 auto', position: 'relative' }}>
+        <div
+          style={{ maxWidth: 800, margin: '0 auto', position: 'relative' }}
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+        >
           {/* Decorative gold quotes */}
           <img
             src="/assets/decorative/quote-marks.svg"
@@ -88,12 +106,22 @@ export function Reviews() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4 }}
+              drag={reviews.length > 1 ? 'x' : false}
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.18}
+              onDragEnd={(_, info) => {
+                if (info.offset.x < -80) next()
+                else if (info.offset.x > 80) prev()
+              }}
               style={{
                 background: 'rgba(255,255,255,0.05)',
                 borderRadius: 20,
                 padding: '48px 56px',
                 border: '1px solid rgba(255,255,255,0.1)',
+                cursor: reviews.length > 1 ? 'grab' : 'default',
+                touchAction: 'pan-y',
               }}
+              whileDrag={{ cursor: 'grabbing', scale: 0.985 }}
               className="review-card-inner"
             >
               <p style={{
@@ -109,7 +137,7 @@ export function Reviews() {
 
               <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                 {review.photo_url
-                  ? <img src={review.photo_url} alt={review.name} style={{ width: 72, height: 72, borderRadius: '50%', objectFit: 'cover', border: '3px solid var(--bp-gold)' }} />
+                  ? <img src={review.photo_url} alt={review.name} style={{ width: 72, height: 72, borderRadius: '50%', objectFit: 'cover', border: '3px solid var(--bp-gold)' }} draggable={false} />
                   : <Monogram name={review.name} />
                 }
                 <div>
@@ -144,17 +172,27 @@ export function Reviews() {
                   key={i}
                   onClick={() => setCurrent(i)}
                   style={{
-                    width: i === current ? 24 : 8,
+                    width: i === current ? 32 : 8,
                     height: 8,
                     borderRadius: 4,
                     border: 'none',
-                    background: i === current ? 'var(--bp-gold)' : 'rgba(255,255,255,0.2)',
+                    background: 'rgba(255,255,255,0.2)',
                     cursor: 'pointer',
-                    transition: 'all 0.3s',
+                    transition: 'width 0.3s',
                     padding: 0,
+                    position: 'relative',
+                    overflow: 'hidden',
                   }}
                   aria-label={`Отзыв ${i + 1}`}
-                />
+                >
+                  {i === current && (
+                    <span
+                      key={`progress-${current}`}
+                      className="review-dot-progress"
+                      style={{ animationPlayState: paused ? 'paused' : 'running' }}
+                    />
+                  )}
+                </button>
               ))}
 
               <button
@@ -172,6 +210,21 @@ export function Reviews() {
       </div>
 
       <style>{`
+        .review-dot-progress {
+          position: absolute;
+          inset: 0;
+          background: var(--bp-gold);
+          border-radius: 4px;
+          transform-origin: left;
+          animation: review-dot-fill ${AUTOPLAY_MS}ms linear forwards;
+        }
+        @keyframes review-dot-fill {
+          from { transform: scaleX(0); }
+          to   { transform: scaleX(1); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .review-dot-progress { animation: none; transform: scaleX(1); }
+        }
         @media (max-width: 640px) {
           .review-card-inner { padding: 32px 24px !important; }
         }

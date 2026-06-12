@@ -1,22 +1,44 @@
-import { motion } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { DeviceFrame } from '../ui/DeviceFrame'
 import { ParticleBackground } from '../ui/ParticleBackground'
+import { scrollToId } from '../../hooks/useLenis'
 
 interface Props {
   kinescopeId: string
 }
 
+const H1_WORDS: { text: string; gold?: boolean; breakAfter?: boolean }[] = [
+  { text: 'Генеративные' },
+  { text: 'нейросети', breakAfter: true },
+  { text: 'для', gold: true },
+  { text: 'бизнеса', gold: true },
+  { text: 'и' },
+  { text: 'частных' },
+  { text: 'лиц' },
+]
+
 export function Hero({ kinescopeId }: Props) {
-  const scrollToContacts = () => {
-    document.getElementById('contacts')?.scrollIntoView({ behavior: 'smooth' })
-  }
-  const scrollToServices = () => {
-    document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })
-  }
+  const sectionRef = useRef<HTMLElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  })
+
+  // Параллакс: фон отстаёт, видео чуть опережает, контент мягко гаснет
+  const yAurora = useTransform(scrollYProgress, [0, 1], [0, 140])
+  const yPattern = useTransform(scrollYProgress, [0, 1], [0, 90])
+  const yContent = useTransform(scrollYProgress, [0, 1], [0, 70])
+  const yDevice = useTransform(scrollYProgress, [0, 1], [0, -50])
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.75], [1, 0.35])
+
+  const scrollToContacts = () => scrollToId('contacts')
+  const scrollToServices = () => scrollToId('services')
 
   return (
     <section
       id="home"
+      ref={sectionRef}
       style={{
         background: 'linear-gradient(135deg, var(--bp-dark-blue) 0%, var(--bp-steel-blue) 100%)',
         minHeight: '100vh',
@@ -27,11 +49,13 @@ export function Hero({ kinescopeId }: Props) {
         paddingTop: 72,
       }}
     >
-      {/* Aurora glow background */}
-      <div className="hero-aurora" aria-hidden="true">
+      {/* Aurora glow background (parallax) */}
+      <motion.div className="hero-aurora" aria-hidden="true" style={{ y: yAurora }}>
         <div className="hero-aurora__blob hero-aurora__blob--steel" />
         <div className="hero-aurora__blob hero-aurora__blob--gold" />
         <div className="hero-aurora__blob hero-aurora__blob--soft" />
+      </motion.div>
+      <div className="hero-aurora" aria-hidden="true">
         <div className="hero-aurora__topline" />
         <div className="hero-aurora__vignette" />
       </div>
@@ -39,22 +63,25 @@ export function Hero({ kinescopeId }: Props) {
       {/* Particle animation */}
       <ParticleBackground />
 
-      {/* Decorative SVG background */}
-      <img
-        src="/assets/hero/hero-bg-pattern.svg"
-        alt=""
+      {/* Decorative SVG background (parallax) */}
+      <motion.div
         aria-hidden="true"
         style={{
           position: 'absolute',
           right: -100,
           top: '50%',
-          transform: 'translateY(-50%)',
+          y: yPattern,
           width: '60%',
           maxWidth: 700,
-          opacity: 0.08,
           pointerEvents: 'none',
         }}
-      />
+      >
+        <img
+          src="/assets/hero/hero-bg-pattern.svg"
+          alt=""
+          style={{ width: '100%', opacity: 0.08, transform: 'translateY(-50%)' }}
+        />
+      </motion.div>
 
       {/* Decorative gold dots */}
       {[...Array(6)].map((_, i) => (
@@ -91,6 +118,7 @@ export function Hero({ kinescopeId }: Props) {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: 'easeOut' }}
+          style={{ y: yContent, opacity: contentOpacity }}
         >
           {/* Badge */}
           <div
@@ -122,9 +150,19 @@ export function Hero({ kinescopeId }: Props) {
               letterSpacing: '-0.02em',
             }}
           >
-            Генеративные нейросети
-            <br />
-            <span style={{ color: 'var(--bp-gold)' }}>для бизнеса</span> и частных лиц
+            {H1_WORDS.map((word, i) => (
+              <span key={i}>
+                <motion.span
+                  initial={{ opacity: 0, y: 26, filter: 'blur(6px)' }}
+                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                  transition={{ duration: 0.55, delay: 0.2 + i * 0.07, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ display: 'inline-block', color: word.gold ? 'var(--bp-gold)' : undefined }}
+                >
+                  {word.text}
+                </motion.span>
+                {word.breakAfter ? <br /> : ' '}
+              </span>
+            ))}
           </h1>
 
           <p
@@ -174,7 +212,7 @@ export function Hero({ kinescopeId }: Props) {
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7, delay: 0.2, ease: 'easeOut' }}
-          style={{ display: 'flex', justifyContent: 'center' }}
+          style={{ display: 'flex', justifyContent: 'center', y: yDevice }}
         >
           <DeviceFrame kinescopeId={kinescopeId} />
         </motion.div>

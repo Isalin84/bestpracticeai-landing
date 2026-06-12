@@ -5,7 +5,9 @@ import { Toaster } from 'react-hot-toast'
 import { Header } from './components/sections/Header'
 import { Footer } from './components/sections/Footer'
 import { CookieBanner } from './components/ui/CookieBanner'
+import { ScrollToTop } from './components/ui/ScrollToTop'
 import { useYandexMetrika } from './hooks/useYandexMetrika'
+import { useLenis } from './hooks/useLenis'
 import { Home } from './pages/Home'
 import { NotFound } from './pages/NotFound'
 import { ArticlePage } from './pages/ArticlePage'
@@ -27,6 +29,7 @@ const Additional = lazy(() => import('./pages/services/Additional').then(m => ({
 
 function PublicLayout() {
   useYandexMetrika()
+  useLenis()
   return (
     <>
       <Header />
@@ -34,6 +37,7 @@ function PublicLayout() {
         <Outlet />
       </main>
       <Footer />
+      <ScrollToTop />
       <CookieBanner />
     </>
   )

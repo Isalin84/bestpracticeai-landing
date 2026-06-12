@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { motion } from 'framer-motion'
 import { toast } from 'react-hot-toast'
@@ -5,8 +6,11 @@ import { api } from '../../api/client'
 import type { LeadFormData } from '../../types'
 
 export function Contacts() {
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<LeadFormData>()
+  const { register, handleSubmit, reset, watch, formState: { errors, isSubmitting } } = useForm<LeadFormData>()
   const [success, setSuccess] = useState(false)
+  const [focused, setFocused] = useState<string | null>(null)
+
+  const values = watch()
 
   const onSubmit = async (data: LeadFormData) => {
     if (data.honeypot) return // spam
@@ -21,6 +25,39 @@ export function Contacts() {
       reset()
     } catch (e: any) {
       toast.error(e.message || 'Ошибка отправки. Попробуйте ещё раз.')
+    }
+  }
+
+  const isFloating = (name: keyof LeadFormData) => focused === name || !!values[name]
+
+  const floatLabel = (name: keyof LeadFormData, isTextarea = false): React.CSSProperties => ({
+    position: 'absolute',
+    left: 12,
+    top: isFloating(name) ? -9 : isTextarea ? 16 : '50%',
+    transform: isFloating(name) || isTextarea ? 'none' : 'translateY(-50%)',
+    fontFamily: 'var(--bp-font-heading)',
+    fontWeight: 600,
+    fontSize: isFloating(name) ? 11 : 14,
+    letterSpacing: isFloating(name) ? '0.06em' : '0.02em',
+    textTransform: 'uppercase',
+    color: isFloating(name) ? (focused === name ? 'var(--bp-gold)' : 'var(--bp-dark-blue)') : '#9ca3af',
+    background: isFloating(name) ? '#fff' : 'transparent',
+    padding: '0 6px',
+    pointerEvents: 'none',
+    transition: 'all 0.18s ease',
+    whiteSpace: 'nowrap',
+    zIndex: 1,
+  })
+
+  const fieldProps = (name: keyof LeadFormData, options?: Parameters<typeof register>[1]) => {
+    const reg = register(name as string as any, options as any)
+    return {
+      ...reg,
+      onFocus: () => setFocused(name),
+      onBlur: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        reg.onBlur(e)
+        setFocused(f => (f === name ? null : f))
+      },
     }
   }
 
@@ -83,7 +120,8 @@ export function Contacts() {
                 <a
                   key={item.label}
                   href={item.href}
-                  style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 16 }}
+                  className="contact-info-card"
+                  style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 16, padding: 8, margin: -8, borderRadius: 12 }}
                 >
                   <div style={{ width: 48, height: 48, background: 'rgba(212,175,55,0.1)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     {item.icon}
@@ -126,8 +164,8 @@ export function Contacts() {
             transition={{ duration: 0.6, delay: 0.1 }}
           >
             {success ? (
-              <div style={{ background: '#fff', borderRadius: 20, padding: '48px 40px', textAlign: 'center', boxShadow: '0 4px 24px rgba(0,0,0,0.07)' }}>
-                <div style={{ fontSize: 48, marginBottom: 16 }}>✓</div>
+              <div style={{ background: '#fff', borderRadius: 20, padding: '48px 40px', textAlign: 'center', boxShadow: 'var(--bp-shadow-card)', position: 'relative', overflow: 'hidden' }}>
+                <SuccessCheck />
                 <h3 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 24, color: 'var(--bp-dark-blue)', marginBottom: 12 }}>
                   Заявка принята!
                 </h3>
@@ -141,56 +179,52 @@ export function Contacts() {
             ) : (
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                style={{ background: '#fff', borderRadius: 20, padding: '40px', boxShadow: '0 4px 24px rgba(0,0,0,0.07)' }}
+                style={{ background: '#fff', borderRadius: 20, padding: '40px', boxShadow: 'var(--bp-shadow-card)' }}
               >
                 {/* Honeypot */}
                 <input {...register('honeypot')} style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
                   {/* Full name */}
-                  <div>
-                    <label style={labelStyle}>ФИО *</label>
+                  <div style={{ position: 'relative' }}>
+                    <label style={floatLabel('full_name')}>ФИО *</label>
                     <input
-                      {...register('full_name', { required: 'Введите ваше имя' })}
-                      placeholder="Иван Иванов"
-                      style={{ ...inputStyle, borderColor: errors.full_name ? '#ef4444' : '#e5e7eb' }}
+                      {...fieldProps('full_name', { required: 'Введите ваше имя' })}
+                      className="bp-input"
+                      style={{ borderColor: errors.full_name ? '#ef4444' : undefined }}
                     />
                     {errors.full_name && <p style={errorStyle}>{errors.full_name.message}</p>}
                   </div>
 
                   {/* Company */}
-                  <div>
-                    <label style={labelStyle}>Компания</label>
-                    <input
-                      {...register('company')}
-                      placeholder="Название вашей компании (необязательно)"
-                      style={inputStyle}
-                    />
+                  <div style={{ position: 'relative' }}>
+                    <label style={floatLabel('company')}>Компания</label>
+                    <input {...fieldProps('company')} className="bp-input" />
                   </div>
 
                   {/* Phone */}
-                  <div>
-                    <label style={labelStyle}>Телефон *</label>
+                  <div style={{ position: 'relative' }}>
+                    <label style={floatLabel('phone')}>Телефон *</label>
                     <input
-                      {...register('phone', {
+                      {...fieldProps('phone', {
                         required: 'Введите телефон',
                         pattern: { value: /^[\d\s\+\-\(\)]{10,}$/, message: 'Некорректный номер' },
                       })}
-                      placeholder="+7 (910) 170-11-26"
                       type="tel"
-                      style={{ ...inputStyle, borderColor: errors.phone ? '#ef4444' : '#e5e7eb' }}
+                      className="bp-input"
+                      style={{ borderColor: errors.phone ? '#ef4444' : undefined }}
                     />
                     {errors.phone && <p style={errorStyle}>{errors.phone.message}</p>}
                   </div>
 
                   {/* Message */}
-                  <div>
-                    <label style={labelStyle}>Ваш запрос *</label>
+                  <div style={{ position: 'relative' }}>
+                    <label style={floatLabel('message', true)}>Ваш запрос *</label>
                     <textarea
-                      {...register('message', { required: 'Опишите ваш запрос' })}
-                      placeholder="Расскажите, что вас интересует..."
+                      {...fieldProps('message', { required: 'Опишите ваш запрос' })}
                       rows={4}
-                      style={{ ...inputStyle, resize: 'vertical', borderColor: errors.message ? '#ef4444' : '#e5e7eb' }}
+                      className="bp-input"
+                      style={{ resize: 'vertical', borderColor: errors.message ? '#ef4444' : undefined }}
                     />
                     {errors.message && <p style={errorStyle}>{errors.message.message}</p>}
                   </div>
@@ -232,36 +266,55 @@ export function Contacts() {
         @media (max-width: 900px) {
           .contacts-grid { grid-template-columns: 1fr !important; }
         }
+        .contact-info-card { transition: background 0.2s, transform 0.2s; }
+        .contact-info-card:hover { background: rgba(212,175,55,0.07); transform: translateX(4px); }
       `}</style>
     </section>
   )
 }
 
-import { useState } from 'react'
-
-const labelStyle: React.CSSProperties = {
-  display: 'block',
-  fontFamily: 'var(--bp-font-heading)',
-  fontWeight: 600,
-  fontSize: 13,
-  color: 'var(--bp-dark-blue)',
-  marginBottom: 6,
-  textTransform: 'uppercase',
-  letterSpacing: '0.05em',
-}
-
-const inputStyle: React.CSSProperties = {
-  width: '100%',
-  padding: '12px 16px',
-  borderRadius: 8,
-  border: '1.5px solid #e5e7eb',
-  fontFamily: 'var(--bp-font-body)',
-  fontSize: 15,
-  color: 'var(--bp-text-dark)',
-  background: '#fafafa',
-  outline: 'none',
-  transition: 'border-color 0.2s',
-  boxSizing: 'border-box',
+/** Рисующаяся галочка + золотой burst после отправки формы */
+function SuccessCheck() {
+  const particles = Array.from({ length: 8 }, (_, i) => {
+    const angle = (i / 8) * Math.PI * 2
+    return { x: Math.cos(angle) * 52, y: Math.sin(angle) * 52 }
+  })
+  return (
+    <div style={{ position: 'relative', width: 72, height: 72, margin: '0 auto 20px' }}>
+      <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+        <motion.circle
+          cx="36" cy="36" r="33"
+          stroke="var(--bp-gold)" strokeWidth="3"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+        />
+        <motion.path
+          d="M22 37 L32 47 L50 27"
+          stroke="var(--bp-gold)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ delay: 0.4, duration: 0.4, ease: 'easeOut' }}
+        />
+      </svg>
+      {particles.map((p, i) => (
+        <motion.span
+          key={i}
+          initial={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+          animate={{ opacity: 0, x: p.x, y: p.y, scale: 0.3 }}
+          transition={{ delay: 0.65, duration: 0.7, ease: 'easeOut' }}
+          style={{
+            position: 'absolute',
+            left: 33, top: 33,
+            width: 6, height: 6,
+            borderRadius: '50%',
+            background: 'var(--bp-gold)',
+            pointerEvents: 'none',
+          }}
+        />
+      ))}
+    </div>
+  )
 }
 
 const errorStyle: React.CSSProperties = {
