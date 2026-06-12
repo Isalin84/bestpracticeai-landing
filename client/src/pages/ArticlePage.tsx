@@ -56,7 +56,7 @@ export function ArticlePage() {
   return (
     <>
       <Helmet>
-        <title>{article.title} — Best Practice AI</title>
+        <title>{`${article.title} — Best Practice AI`}</title>
         {article.excerpt && <meta name="description" content={article.excerpt} />}
         <link rel="canonical" href={canonical} />
         <meta property="og:title" content={`${article.title} — Best Practice AI`} />
