@@ -182,18 +182,24 @@ seoRouter.get('/', (req, res) => {
       .map(a => `<li><a href="/blog/${escapeHtml(a.slug)}">${escapeHtml(a.title)}</a></li>`)
       .join('\n')
 
+    // инлайн-оформление под бренд: этот блок виден долю секунды до загрузки React
     const rootHtml = `
-<header><h1>Генеративные нейросети для бизнеса и частных лиц</h1></header>
+<style>#root a{color:#D4AF37}#root h1,#root h2{font-family:Montserrat,sans-serif}</style>
+<div style="background:linear-gradient(135deg,#0B1D3A 0%,#1E3A5F 100%);color:#FAF9F6;min-height:100vh;padding:120px 24px 64px;font-family:Lora,Georgia,serif">
+<div style="max-width:1280px;margin:0 auto">
+<header><h1 style="font-size:clamp(36px,5vw,56px);line-height:1.15;margin-bottom:24px">Генеративные нейросети <span style="color:#D4AF37">для бизнеса</span> и частных лиц</h1></header>
 <main>
-<p>AI Студия Best Practice: создаём корпоративные ИИ-видео с кастомными аватарами, обучаем работе с нейросетями и разрабатываем цифровые продукты. Эксперт — Иван Салин: 500+ часов видеоконтента, 2 федеральные премии, до 70% экономии на производстве контента.</p>
-<section><h2>Услуги</h2><ul>
+<p style="max-width:640px;line-height:1.7;opacity:.85">AI Студия Best Practice: создаём корпоративные ИИ-видео с кастомными аватарами, обучаем работе с нейросетями и разрабатываем цифровые продукты. Эксперт — Иван Салин: 500+ часов видеоконтента, 2 федеральные премии, до 70% экономии на производстве контента.</p>
+<section><h2 style="margin:32px 0 12px">Услуги</h2><ul style="line-height:1.9;padding-left:20px">
 ${servicesHtml}
 </ul></section>
-<section><h2>Медиа — статьи о нейросетях</h2><ul>
+<section><h2 style="margin:32px 0 12px">Медиа — статьи о нейросетях</h2><ul style="line-height:1.9;padding-left:20px">
 ${articlesHtml}
 </ul></section>
-<section><h2>Контакты</h2><p>Телефон: +7 (910) 170-11-26 · Email: salinivan@mail.ru · Telegram: @bestpractice_hs_ai</p></section>
-</main>`
+<section><h2 style="margin:32px 0 12px">Контакты</h2><p>Телефон: +7 (910) 170-11-26 · Email: salinivan@mail.ru · Telegram: @bestpractice_hs_ai</p></section>
+</main>
+</div>
+</div>`
 
     sendHtml(res, renderPage({
       ...defaultMeta('/'),
@@ -242,15 +248,17 @@ seoRouter.get('/blog/:slug', (req, res) => {
     }
 
     const rootHtml = `
-<main>
-<nav><a href="/">Главная</a> → <a href="/#media">Медиа</a></nav>
+<div style="background:#FAF9F6;min-height:100vh;padding:96px 24px 64px">
+<main style="max-width:800px;margin:0 auto">
+<nav style="font-size:13px;color:#9ca3af;margin-bottom:24px"><a href="/" style="color:#9ca3af">Главная</a> → <a href="/#media" style="color:#9ca3af">Медиа</a></nav>
 <article class="prose-bp">
-<p>${dateHuman}</p>
-<h1>${escapeHtml(article.title)}</h1>
-${article.excerpt ? `<p><em>${escapeHtml(article.excerpt)}</em></p>` : ''}
+<p style="font-size:13px;color:#9ca3af">${dateHuman}</p>
+<h1 style="font-family:Montserrat,sans-serif;color:#0B1D3A;line-height:1.2">${escapeHtml(article.title)}</h1>
+${article.excerpt ? `<p style="font-style:italic;color:#6b7280;border-left:4px solid #D4AF37;padding-left:20px"><em>${escapeHtml(article.excerpt)}</em></p>` : ''}
 ${md.render(article.content)}
 </article>
-</main>`
+</main>
+</div>`
 
     sendHtml(res, renderPage({
       title: `${article.title} — Best Practice AI`,
@@ -277,12 +285,14 @@ seoRouter.get('/services/:slug', (req, res) => {
     }
     const canonical = `${SITE_URL}/services/${req.params.slug}`
     const rootHtml = `
-<main>
-<nav><a href="/">Главная</a> → <a href="/#services">Услуги</a></nav>
-<h1>${escapeHtml(service.name)}</h1>
-<p>${escapeHtml(service.description)}</p>
-<p>AI Студия Best Practice · <a href="/">bestpracticeai.ru</a> · +7 (910) 170-11-26</p>
-</main>`
+<div style="background:linear-gradient(135deg,#0B1D3A 0%,#1E3A5F 100%);color:#FAF9F6;min-height:100vh;padding:120px 24px 64px;font-family:Lora,Georgia,serif">
+<main style="max-width:900px;margin:0 auto;text-align:center">
+<nav style="font-size:13px;opacity:.6;margin-bottom:24px"><a href="/" style="color:inherit">Главная</a> → <a href="/#services" style="color:inherit">Услуги</a></nav>
+<h1 style="font-family:Montserrat,sans-serif;font-size:clamp(28px,4vw,48px);line-height:1.2;margin-bottom:20px">${escapeHtml(service.name)}</h1>
+<p style="font-size:18px;line-height:1.7;opacity:.8;max-width:680px;margin:0 auto 24px">${escapeHtml(service.description)}</p>
+<p style="opacity:.7">AI Студия Best Practice · <a href="/" style="color:#D4AF37">bestpracticeai.ru</a> · +7 (910) 170-11-26</p>
+</main>
+</div>`
     sendHtml(res, renderPage({
       title: `${service.name} — Best Practice AI`,
       description: service.description,
