@@ -1,6 +1,12 @@
-import { Helmet } from 'react-helmet-async'
 import { motion } from 'framer-motion'
-import { ServiceLayout } from './ServiceLayout'
+import { ServiceLayout, type FaqItem } from './ServiceLayout'
+
+const FAQ: FaqItem[] = [
+  { q: 'Что такое нейрофотосессия?', a: 'Это профессиональные портреты и корпоративные фото, созданные генеративным ИИ на основе ваших реальных фотографий. Премиальный визуальный контент без студии, визажиста и долгих съёмок.' },
+  { q: 'Как создаётся персональный видеоаватар?', a: 'Один раз записывается короткое видео с вами, по нему обучается цифровая копия. Дальше аватар озвучивает любые сценарии — новые ролики без съёмок.' },
+  { q: 'Музыка будет уникальной?', a: 'Да, треки генерируются под ваш бренд и задачу — для видеороликов, презентаций и аудиобрендинга.' },
+  { q: 'Можно ли заказать брендбук с нуля?', a: 'Да: разработаем визуальную идентичность с помощью ИИ-инструментов — логотип, палитру, типографику и правила применения в едином стиле.' },
+]
 
 const SERVICES = [
   {
@@ -28,14 +34,12 @@ const SERVICES = [
 export function Additional() {
   return (
     <>
-      <Helmet>
-        <title>Дополнительные услуги — Best Practice AI</title>
-      </Helmet>
       <ServiceLayout
         slug="additional"
         heroTitle="Дополнительные услуги Best Practice AI"
         heroSubtitle="Полный спектр AI-решений для вашего бренда и коммуникаций."
         ctaLabel="Узнать стоимость"
+        faq={FAQ}
       >
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '64px 24px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }} className="additional-grid">

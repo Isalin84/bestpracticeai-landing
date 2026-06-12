@@ -1,6 +1,5 @@
 import React from 'react'
-import { Helmet } from 'react-helmet-async'
-import { ServiceLayout, ContentBlock } from './ServiceLayout'
+import { ServiceLayout, ContentBlock, type FaqItem } from './ServiceLayout'
 
 const PORTFOLIO = [
   { name: 'Vincent AI', description: 'Telegram-бот, развивающая игра для детей', href: 'https://t.me/VincentArt_bot' },
@@ -8,17 +7,23 @@ const PORTFOLIO = [
   { name: 'Aeterra', description: 'Лендинг страница', href: 'https://aeterra.bestpracticeai.ru/' },
 ]
 
+const FAQ: FaqItem[] = [
+  { q: 'Что такое вайбкодинг?', a: 'Это разработка цифровых продуктов с помощью генеративного ИИ: нейросеть пишет код по описанию задачи, а человек направляет процесс. Получается в разы быстрее и дешевле классической разработки.' },
+  { q: 'Что можно заказать?', a: 'Telegram-боты с встроенным ИИ (чат-ассистенты, автоответы, игры), лендинги и посадочные страницы, веб-приложения, дашборды и инструменты автоматизации бизнес-процессов.' },
+  { q: 'Сколько времени занимает разработка Telegram-бота?', a: 'Простые боты делаются за несколько дней, продукты с ИИ-логикой — за пару недель. После брифа называем точный срок и стоимость.' },
+  { q: 'Есть ли примеры готовых работ?', a: 'Да: Vincent AI — Telegram-бот с развивающей игрой для детей, Kopilka — трекер карманных денег для обучения финансовой грамотности, Aeterra — лендинг.' },
+  { q: 'Можно ли научиться вайбкодингу самому?', a: 'Да, мы обучаем вайбкодингу индивидуально и в группах — без предварительных знаний программирования. Подходит предпринимателям и менеджерам, у которых есть идея продукта.' },
+]
+
 export function Vibecoding() {
   return (
     <>
-      <Helmet>
-        <title>Вайбкодинг & Telegram-боты — Best Practice AI</title>
-      </Helmet>
       <ServiceLayout
         slug="vibecoding"
         heroTitle="Вайбкодинг: цифровые продукты с помощью ИИ"
         heroSubtitle="Создаём функциональные Telegram-боты, лендинги и веб-приложения — быстро и без раздутых бюджетов на разработку."
         ctaLabel="Обсудить проект"
+        faq={FAQ}
       >
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '64px 24px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, marginBottom: 64 }} className="service-detail-grid">

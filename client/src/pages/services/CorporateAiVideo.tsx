@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Helmet } from 'react-helmet-async'
 import { useInView } from 'react-intersection-observer'
-import { ServiceLayout, ContentBlock } from './ServiceLayout'
+import { ServiceLayout, ContentBlock, type FaqItem } from './ServiceLayout'
 import { api } from '../../api/client'
 import type { PortfolioVideo } from '../../types'
 
@@ -33,6 +32,14 @@ function VideoCard({ video }: { video: PortfolioVideo }) {
   )
 }
 
+const FAQ: FaqItem[] = [
+  { q: 'Сколько стоит корпоративное ИИ-видео?', a: 'Стоимость зависит от хронометража, количества роликов и сложности постановки. В среднем производство с ИИ-аватаром обходится до 70% дешевле классической видеосъёмки: не нужны студия, съёмочная команда и пересъёмки. Точный расчёт делаем после короткого брифа.' },
+  { q: 'Что такое кастомный AI-аватар?', a: 'Это цифровая копия вашего спикера или эксперта, созданная по видеозаписи. Аватар создаётся один раз, после чего любые новые ролики записываются без участия человека в кадре — достаточно текста сценария.' },
+  { q: 'Сколько времени занимает производство ролика?', a: 'Обычно от нескольких дней до двух-трёх недель в зависимости от объёма. Это значительно быстрее классической съёмки: не нужно согласовывать площадку, график спикера и пересъёмки.' },
+  { q: 'Подойдут ли ИИ-видео для инструктажей по охране труда?', a: 'Да, это наше профильное направление. Основатель студии Иван Салин — эксперт по промышленной безопасности с 20-летним опытом, поэтому инструктажи и обучающие видео по ОТиПБ создаются с пониманием нормативных требований.' },
+  { q: 'В каких форматах вы делаете видео?', a: 'Горизонтальные 16:9 для LMS, сайтов и презентаций и вертикальные 9:16 для соцсетей и мессенджеров. Добавляем фирменный стиль, субтитры и спецэффекты.' },
+]
+
 export function CorporateAiVideo() {
   const [videos, setVideos] = useState<PortfolioVideo[]>([])
   const [tab, setTab] = useState<'16:9' | '9:16' | 'all'>('all')
@@ -45,15 +52,12 @@ export function CorporateAiVideo() {
 
   return (
     <>
-      <Helmet>
-        <title>Корпоративные ИИ-видео с кастомными аватарами — Best Practice AI</title>
-        <meta name="description" content="Создаём обучающие видео, инструктажи и промо-ролики с AI-аватарами. Быстро, качественно, с экономией до 70%." />
-      </Helmet>
       <ServiceLayout
         slug="corporate-ai-video"
         heroTitle="Корпоративные ИИ-видео с кастомными аватарами"
         heroSubtitle="Создаём профессиональные видеоматериалы с персональным AI-аватаром вашего эксперта — быстро, качественно, с экономией до 70% бюджета."
         ctaLabel="Обсудить проект"
+        faq={FAQ}
       >
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '64px 24px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, marginBottom: 64 }} className="service-detail-grid">
