@@ -184,7 +184,7 @@ bestpracticeai/
 - **Левая колонка:** контактные данные
   - Телефон: +7 (910) 170-11-26 (кликабельный tel:)
   - Email: salinivan@mail.ru (кликабельный mailto:)
-  - Telegram: https://t.me/bestpractice_hs_ai (кнопка)
+  - Telegram: https://t.me/bestpractice_ai (кнопка)
   - VK: https://vk.com/club224447229 (кнопка)
 - **Правая колонка:** форма обратной связи
   - Поля: ФИО (обязательное), Компания (необязательное), Телефон (обязательное), Тип запроса (выпадающий список или textarea)
@@ -661,7 +661,7 @@ Sitemap: https://bestpracticeai.ru/sitemap.xml
 Телефон: +7 (910) 170-11-26
 Email: salinivan@mail.ru
 Telegram личный: @isalin
-Telegram канал: https://t.me/bestpractice_hs_ai
+Telegram канал: https://t.me/bestpractice_ai
 VK сообщество: https://vk.com/club224447229
 Сайт: https://bestpracticeai.ru
 ```

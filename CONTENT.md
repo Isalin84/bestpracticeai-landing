@@ -375,7 +375,7 @@ Slug: vibecoding-chto-eto
 Email: salinivan@mail.ru
 
 Мессенджеры:
-[Telegram] t.me/bestpractice_hs_ai
+[Telegram] t.me/bestpractice_ai
 [ВКонтакте] vk.com/club224447229
 ```
 
@@ -420,7 +420,7 @@ Email: salinivan@mail.ru
 Использование cookies
 
 Социальные сети:
-[Telegram] https://t.me/bestpractice_hs_ai
+[Telegram] https://t.me/bestpractice_ai
 [ВКонтакте] https://vk.com/club224447229
 
 Копирайт:

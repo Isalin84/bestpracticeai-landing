@@ -19,7 +19,7 @@ export function Footer() {
               Генеративные нейросети для бизнеса и частных лиц. Экспертиза · Инновации · Результат.
             </p>
             <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
-              <a href="https://t.me/bestpractice_hs_ai" target="_blank" rel="noopener noreferrer" style={socialBtnStyle}>
+              <a href="https://t.me/bestpractice_ai" target="_blank" rel="noopener noreferrer" style={socialBtnStyle}>
                 TG
               </a>
               <a href="https://vk.com/club224447229" target="_blank" rel="noopener noreferrer" style={socialBtnStyle}>
@@ -61,7 +61,7 @@ export function Footer() {
         {/* Divider */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
           <span style={{ fontFamily: 'var(--bp-font-body)', fontSize: 13, color: 'rgba(250,249,246,0.35)' }}>
-            © 2025 Best Practice AI. Все права защищены.
+            © 2026 Best Practice AI. Все права защищены.
           </span>
           <a href="https://bestpracticeai.ru" style={{ fontFamily: 'var(--bp-font-body)', fontSize: 13, color: 'rgba(250,249,246,0.35)', textDecoration: 'none' }}>
             bestpracticeai.ru

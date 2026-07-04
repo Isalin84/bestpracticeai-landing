@@ -362,7 +362,7 @@ ${servicesHtml}
 <section><h2 style="margin:32px 0 12px">Медиа — статьи о нейросетях</h2><ul style="line-height:1.9;padding-left:20px">
 ${articlesHtml}
 </ul></section>
-<section><h2 style="margin:32px 0 12px">Контакты</h2><p>Телефон: +7 (910) 170-11-26 · Email: salinivan@mail.ru · Telegram: @bestpractice_hs_ai</p></section>
+<section><h2 style="margin:32px 0 12px">Контакты</h2><p>Телефон: +7 (910) 170-11-26 · Email: salinivan@mail.ru · Telegram-канал: @bestpractice_ai · Личный Telegram: @isalin</p></section>
 </main>
 </div>
 </div>`

@@ -135,7 +135,7 @@ export function Contacts() {
 
               <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
                 <a
-                  href="https://t.me/bestpractice_hs_ai"
+                  href="https://t.me/bestpractice_ai"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-primary"
