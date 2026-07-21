@@ -34,27 +34,12 @@ function injectMetrika(id: string) {
 
 export function useYandexMetrika() {
   useEffect(() => {
-    let metrikaId = ''
-
-    // Fetch ID from API
     fetch('/api/settings')
       .then(r => r.json())
       .then((data: Record<string, string>) => {
-        metrikaId = data.yandex_metrika_id || ''
-        if (!metrikaId) return
-
-        // If consent already given — inject immediately
-        if (localStorage.getItem('bp_cookie_consent') === 'true') {
-          injectMetrika(metrikaId)
-        }
+        const metrikaId = data.yandex_metrika_id || ''
+        if (metrikaId) injectMetrika(metrikaId)
       })
       .catch(() => {})
-
-    // Listen for consent event
-    const onConsent = () => {
-      if (metrikaId) injectMetrika(metrikaId)
-    }
-    window.addEventListener('cookie-consent-granted', onConsent)
-    return () => window.removeEventListener('cookie-consent-granted', onConsent)
   }, [])
 }

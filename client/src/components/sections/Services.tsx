@@ -7,21 +7,21 @@ const SERVICES = [
   {
     slug: 'corporate-ai-video',
     icon: '/assets/icons/icon-corporate-video.png',
-    title: 'Корпоративные ИИ-видео',
+    title: 'Создание корпоративных видеороликов',
     description: 'Обучающие ролики, инструктажи, онбординг и промо с вашим AI-аватаром',
     num: '01',
   },
   {
     slug: 'ai-video-training',
     icon: '/assets/icons/icon-video-training.png',
-    title: 'Обучение созданию ИИ-видео',
+    title: 'Обучение созданию корпоративных обучающих роликов с помощью ИИ',
     description: 'От базы знаний до кастомного аватара, музыки и спецэффектов — через доступные AI-инструменты',
     num: '02',
   },
   {
     slug: 'neural-networks-training',
     icon: '/assets/icons/icon-neural-training.png',
-    title: 'Обучение нейросетям',
+    title: 'Обучение использованию генеративного ИИ в работе и жизни',
     description: 'Групповые и индивидуальные занятия — от промптинга до создания ИИ-агентов',
     num: '03',
   },
@@ -57,10 +57,21 @@ export function Services() {
           transition={{ duration: 0.6 }}
           style={{ textAlign: 'center', marginBottom: 64 }}
         >
+          <div style={{
+            fontFamily: 'var(--bp-font-heading)',
+            fontWeight: 600,
+            fontSize: 13,
+            letterSpacing: '0.22em',
+            textTransform: 'uppercase',
+            color: 'var(--bp-gold)',
+            marginBottom: 14,
+          }}>
+            Best Practice AI
+          </div>
           <h2 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 'clamp(28px, 4vw, 42px)', color: '#fff', marginBottom: 16 }}>
             Наши услуги
           </h2>
-          <p style={{ fontFamily: 'var(--bp-font-body)', fontSize: 18, color: 'rgba(250,249,246,0.55)', maxWidth: 600, margin: '0 auto' }}>
+          <p style={{ fontFamily: 'var(--bp-font-body)', fontSize: 18, color: 'rgba(250,249,246,0.7)', maxWidth: 600, margin: '0 auto' }}>
             Выберите то, что подходит именно вам — или свяжитесь с нами, и мы подберём оптимальное решение
           </p>
         </motion.div>
@@ -89,8 +100,8 @@ export function Services() {
           .services-row > * { flex: 0 0 100% !important; }
         }
         .service-card-inner {
-          background: rgba(255,255,255,0.04);
-          border: 1px solid rgba(212,175,55,0.15);
+          position: relative;
+          background: linear-gradient(160deg, rgba(42,79,122,0.45) 0%, rgba(30,58,95,0.35) 40%, rgba(11,29,58,0.6) 100%);
           border-radius: 16px;
           padding: 36px 28px 32px;
           height: 100%;
@@ -98,20 +109,61 @@ export function Services() {
           flex-direction: column;
           gap: 16px;
           cursor: pointer;
-          transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+          overflow: hidden;
+          transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
           box-sizing: border-box;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+        }
+        .service-card-inner::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: 16px;
+          padding: 1px;
+          background: linear-gradient(160deg, rgba(212,175,55,0.55), rgba(212,175,55,0.1) 45%, rgba(212,175,55,0.3));
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          mask-composite: exclude;
+          pointer-events: none;
+          transition: opacity 0.25s ease;
         }
         .service-card-inner:hover {
           transform: translateY(-4px);
-          border-color: var(--bp-gold);
-          background: rgba(255,255,255,0.07);
-          box-shadow: 0 16px 48px rgba(0,0,0,0.3), 0 0 0 1px rgba(212,175,55,0.3);
+          background: linear-gradient(160deg, rgba(42,79,122,0.6) 0%, rgba(30,58,95,0.5) 40%, rgba(11,29,58,0.7) 100%);
+          box-shadow: 0 24px 64px rgba(0,0,0,0.45), 0 0 40px rgba(212,175,55,0.12);
+        }
+        .service-card-inner:hover::before {
+          background: linear-gradient(160deg, rgba(212,175,55,0.9), rgba(212,175,55,0.25) 45%, rgba(212,175,55,0.55));
         }
         .service-card-inner:hover .service-arrow {
           transform: translateX(4px);
         }
+        .service-card-inner:hover .service-more {
+          color: var(--bp-soft-gold);
+        }
+        .service-card-inner:hover .service-icon-img {
+          filter: drop-shadow(0 0 16px rgba(212,175,55,0.55));
+        }
         .service-arrow {
           transition: transform 0.2s ease;
+        }
+        .service-num-watermark {
+          position: absolute;
+          top: 18px;
+          left: 22px;
+          font-family: var(--bp-font-heading);
+          font-weight: 700;
+          font-size: 68px;
+          line-height: 1;
+          color: transparent;
+          -webkit-text-stroke: 1px rgba(212,175,55,0.3);
+          pointer-events: none;
+          user-select: none;
+        }
+        .service-icon-img {
+          filter: drop-shadow(0 0 12px rgba(212,175,55,0.35));
+          transition: filter 0.25s ease;
         }
       `}</style>
     </section>
@@ -134,34 +186,27 @@ function ServiceCard({ service, index, cardWidth }: {
       <Link to={`/services/${service.slug}`} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
         <TiltCard style={{ height: '100%' }}>
         <div className="service-card-inner" style={{ transformStyle: 'preserve-3d' }}>
-          {/* Number + icon row */}
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-            <span style={{
-              fontFamily: 'var(--bp-font-heading)',
-              fontWeight: 700,
-              fontSize: 13,
-              color: 'var(--bp-gold)',
-              opacity: 0.7,
-              letterSpacing: '0.08em',
-            }}>
-              {service.num}
-            </span>
+          <span className="service-num-watermark" aria-hidden="true">{service.num}</span>
+
+          {/* Icon row */}
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end' }}>
             <div style={{
-              width: 60, height: 60,
-              background: 'rgba(212,175,55,0.1)',
-              borderRadius: 14,
+              width: 64, height: 64,
+              background: 'radial-gradient(circle at 30% 25%, rgba(212,175,55,0.35), rgba(212,175,55,0.08))',
+              border: '1px solid rgba(212,175,55,0.35)',
+              borderRadius: 16,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               flexShrink: 0,
               transform: 'translateZ(28px)',
             }}>
-              <img src={service.icon} alt={service.title} style={{ width: 40, height: 40, objectFit: 'contain' }} />
+              <img src={service.icon} alt={service.title} className="service-icon-img" style={{ width: 42, height: 42, objectFit: 'contain' }} />
             </div>
           </div>
 
           <h3 style={{
             fontFamily: 'var(--bp-font-heading)',
             fontWeight: 600,
-            fontSize: 18,
+            fontSize: 19,
             color: '#fff',
             lineHeight: 1.3,
             margin: 0,
@@ -172,7 +217,7 @@ function ServiceCard({ service, index, cardWidth }: {
           <p style={{
             fontFamily: 'var(--bp-font-body)',
             fontSize: 14,
-            color: 'rgba(250,249,246,0.55)',
+            color: 'rgba(250,249,246,0.72)',
             lineHeight: 1.65,
             flex: 1,
             margin: 0,
@@ -180,16 +225,17 @@ function ServiceCard({ service, index, cardWidth }: {
             {service.description}
           </p>
 
-          <div style={{
+          <div className="service-more" style={{
             fontFamily: 'var(--bp-font-heading)',
             fontWeight: 600,
-            fontSize: 13,
+            fontSize: 14,
             color: 'var(--bp-gold)',
             display: 'flex',
             alignItems: 'center',
             gap: 6,
-            paddingTop: 4,
-            borderTop: '1px solid rgba(212,175,55,0.12)',
+            paddingTop: 8,
+            borderTop: '1px solid rgba(212,175,55,0.18)',
+            transition: 'color 0.2s ease',
           }}>
             Подробнее
             <span className="service-arrow">→</span>

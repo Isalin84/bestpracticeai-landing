@@ -3,9 +3,9 @@ import { Helmet } from 'react-helmet-async'
 import { motion } from 'framer-motion'
 
 const SERVICE_NAMES: Record<string, string> = {
-  'corporate-ai-video': 'Корпоративные ИИ-видео',
-  'ai-video-training': 'Обучение ИИ-видео',
-  'neural-networks-training': 'Обучение нейросетям',
+  'corporate-ai-video': 'Создание корпоративных видеороликов',
+  'ai-video-training': 'Обучение созданию обучающих роликов',
+  'neural-networks-training': 'Обучение генеративному ИИ',
   'vibecoding': 'Вайбкодинг & боты',
   'additional': 'Дополнительные услуги',
 }
@@ -13,15 +13,15 @@ const SERVICE_NAMES: Record<string, string> = {
 // Синхронизировано с server/routes/seo.ts (SSR-версии страниц для поисковиков)
 const SERVICE_SEO: Record<string, { title: string; description: string }> = {
   'corporate-ai-video': {
-    title: 'Корпоративные ИИ-видео с аватарами — заказать | Best Practice AI',
+    title: 'Создание корпоративных видеороликов с ИИ — заказать | Best Practice AI',
     description: 'Обучающие видео, инструктажи, онбординг и промо-ролики с ИИ-аватарами. Экономия до 70% на производстве корпоративного видеоконтента.',
   },
   'ai-video-training': {
-    title: 'Обучение созданию ИИ-видео с аватарами — курс | Best Practice AI',
-    description: 'Научим создавать видеоролики с AI-аватарами самостоятельно: от базы знаний до кастомного аватара, уникальной музыки и спецэффектов.',
+    title: 'Обучение созданию обучающих роликов с помощью ИИ | Best Practice AI',
+    description: 'Научим создавать корпоративные обучающие ролики с AI-аватарами самостоятельно: от базы знаний до кастомного аватара, музыки и спецэффектов.',
   },
   'neural-networks-training': {
-    title: 'Обучение нейросетям для бизнеса и частных лиц | Best Practice AI',
+    title: 'Обучение генеративному ИИ для работы и жизни | Best Practice AI',
     description: 'Групповые и индивидуальные занятия: промптинг, выбор нейросетей, ИИ-ассистенты, агенты, вайбкодинг. Практика без теоретической воды.',
   },
   'vibecoding': {

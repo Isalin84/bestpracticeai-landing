@@ -12,7 +12,7 @@ export function NeuralNetworksTraining() {
     <>
       <ServiceLayout
         slug="neural-networks-training"
-        heroTitle="Обучение применению генеративных нейросетей для работы и жизни"
+        heroTitle="Обучение использованию генеративного ИИ в работе и жизни"
         heroSubtitle="Практические занятия, которые сразу применяете в работе. Без теоретической воды — только то, что работает."
         ctaLabel="Запросить программу"
         faq={FAQ}

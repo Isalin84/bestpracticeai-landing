@@ -4,7 +4,6 @@ import { HelmetProvider } from 'react-helmet-async'
 import { Toaster } from 'react-hot-toast'
 import { Header } from './components/sections/Header'
 import { Footer } from './components/sections/Footer'
-import { CookieBanner } from './components/ui/CookieBanner'
 import { ScrollToTop } from './components/ui/ScrollToTop'
 import { useYandexMetrika } from './hooks/useYandexMetrika'
 import { useLenis } from './hooks/useLenis'
@@ -38,7 +37,6 @@ function PublicLayout() {
       </main>
       <Footer />
       <ScrollToTop />
-      <CookieBanner />
     </>
   )
 }

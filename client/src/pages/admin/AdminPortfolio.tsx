@@ -3,9 +3,9 @@ import { api } from '../../api/client'
 import type { PortfolioVideo } from '../../types'
 
 const SERVICES = [
-  { value: 'corporate-ai-video', label: 'Корпоративные ИИ-видео' },
-  { value: 'ai-video-training', label: 'Обучение ИИ-видео' },
-  { value: 'neural-networks-training', label: 'Обучение нейросетям' },
+  { value: 'corporate-ai-video', label: 'Создание корпоративных видеороликов' },
+  { value: 'ai-video-training', label: 'Обучение созданию обучающих роликов' },
+  { value: 'neural-networks-training', label: 'Обучение генеративному ИИ' },
   { value: 'vibecoding', label: 'Вайбкодинг' },
   { value: 'additional', label: 'Дополнительные услуги' },
 ]
