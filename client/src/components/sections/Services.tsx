@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { DragCarousel } from '../ui/DragCarousel'
+import { CoverflowCarousel } from '../ui/CoverflowCarousel'
 import { SectionSpotlight } from '../ui/SectionSpotlight'
 import { api } from '../../api/client'
 
@@ -71,7 +71,7 @@ export function Services() {
   }, [])
 
   return (
-    <section id="services" className="bp-grain" style={{ background: 'var(--bp-dark-blue)', padding: '80px 0', position: 'relative' }}>
+    <section id="services" className="bp-grain" style={{ background: 'var(--bp-dark-blue)', padding: '80px 0 72px', position: 'relative', overflow: 'hidden' }}>
       <div className="section-topline" aria-hidden="true" />
       <SectionSpotlight />
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
@@ -102,26 +102,37 @@ export function Services() {
           </p>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-        >
-          <DragCarousel ariaLabel="Услуги" theme="dark" gap={28}>
-            {services.map(service => (
-              <ServiceCard key={service.slug} service={service} />
-            ))}
-          </DragCarousel>
-        </motion.div>
       </div>
+
+      {/* Coverflow на всю ширину экрана — карточки уходят за края как на референсе */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        style={{ padding: '0 16px' }}
+      >
+        <CoverflowCarousel
+          items={services}
+          getKey={s => s.slug}
+          ariaLabel="Услуги"
+          getShadowImage={s => s.image}
+          renderCard={(service, isActive) => <ServiceCard service={service} isActive={isActive} />}
+          renderTag={service => (
+            <>
+              <span style={{ opacity: 0.7 }}>{service.num}</span>
+              {service.title}
+            </>
+          )}
+        />
+      </motion.div>
 
       <style>{`
         .service-photo-card {
           position: relative;
-          width: clamp(280px, 30vw, 420px);
-          aspect-ratio: 3 / 4;
-          border-radius: 20px;
+          width: 100%;
+          height: 100%;
+          border-radius: 24px;
           overflow: hidden;
           display: block;
           text-decoration: none;
@@ -134,7 +145,7 @@ export function Services() {
           content: '';
           position: absolute;
           inset: 0;
-          border-radius: 20px;
+          border-radius: 24px;
           padding: 1px;
           background: linear-gradient(160deg, rgba(212,175,55,0.55), rgba(212,175,55,0.08) 45%, rgba(212,175,55,0.3));
           -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -145,11 +156,10 @@ export function Services() {
           z-index: 3;
           transition: opacity 0.3s ease;
         }
-        .service-photo-card:hover {
-          transform: translateY(-6px);
+        .service-photo-card.is-active:hover {
           box-shadow: 0 28px 72px rgba(0,0,0,0.5), 0 0 48px rgba(212,175,55,0.14);
         }
-        .service-photo-card:hover::before {
+        .service-photo-card.is-active:hover::before {
           background: linear-gradient(160deg, rgba(212,175,55,0.95), rgba(212,175,55,0.25) 45%, rgba(212,175,55,0.6));
         }
         .service-photo-card__img {
@@ -163,8 +173,15 @@ export function Services() {
           -webkit-user-drag: none;
           pointer-events: none;
         }
-        .service-photo-card:hover .service-photo-card__img {
+        .service-photo-card.is-active:hover .service-photo-card__img {
           transform: scale(1.05);
+        }
+        .service-photo-card__body {
+          transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+        .service-photo-card:not(.is-active) .service-photo-card__body {
+          opacity: 0;
+          transform: translateY(10px);
         }
         .service-photo-card__scrim {
           position: absolute;
@@ -198,15 +215,21 @@ export function Services() {
           gap: 10px;
         }
         .service-photo-card__more .service-arrow { transition: transform 0.2s ease; }
-        .service-photo-card:hover .service-arrow { transform: translateX(4px); }
+        .service-photo-card.is-active:hover .service-arrow { transform: translateX(4px); }
       `}</style>
     </section>
   )
 }
 
-function ServiceCard({ service }: { service: ServiceCardData }) {
+function ServiceCard({ service, isActive }: { service: ServiceCardData; isActive: boolean }) {
   return (
-    <Link to={`/services/${service.slug}`} className="service-photo-card" draggable={false}>
+    <Link
+      to={`/services/${service.slug}`}
+      className={`service-photo-card ${isActive ? 'is-active' : ''}`}
+      draggable={false}
+      tabIndex={isActive ? 0 : -1}
+      aria-hidden={!isActive}
+    >
       <img
         src={service.image}
         alt={service.title}
@@ -220,36 +243,38 @@ function ServiceCard({ service }: { service: ServiceCardData }) {
         <h3 style={{
           fontFamily: 'var(--bp-font-heading)',
           fontWeight: 600,
-          fontSize: 'clamp(18px, 1.6vw, 22px)',
+          fontSize: 'clamp(18px, 1.7vw, 24px)',
           color: '#fff',
-          lineHeight: 1.3,
+          lineHeight: 1.25,
           margin: 0,
           textShadow: '0 2px 12px rgba(11,29,58,0.8)',
         }}>
           {service.title}
         </h3>
-        <p style={{
-          fontFamily: 'var(--bp-font-body)',
-          fontSize: 14,
-          color: 'rgba(250,249,246,0.78)',
-          lineHeight: 1.55,
-          margin: 0,
-        }}>
-          {service.description}
-        </p>
-        <div className="service-photo-card__more" style={{
-          fontFamily: 'var(--bp-font-heading)',
-          fontWeight: 600,
-          fontSize: 14,
-          color: 'var(--bp-gold)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 6,
-          paddingTop: 10,
-          borderTop: '1px solid rgba(212,175,55,0.22)',
-        }}>
-          Подробнее
-          <span className="service-arrow">→</span>
+        <div className="service-photo-card__meta">
+          <p style={{
+            fontFamily: 'var(--bp-font-body)',
+            fontSize: 14,
+            color: 'rgba(250,249,246,0.78)',
+            lineHeight: 1.55,
+            margin: '0 0 10px',
+          }}>
+            {service.description}
+          </p>
+          <div className="service-photo-card__more" style={{
+            fontFamily: 'var(--bp-font-heading)',
+            fontWeight: 600,
+            fontSize: 14,
+            color: 'var(--bp-gold)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            paddingTop: 10,
+            borderTop: '1px solid rgba(212,175,55,0.22)',
+          }}>
+            Подробнее
+            <span className="service-arrow">→</span>
+          </div>
         </div>
       </div>
     </Link>

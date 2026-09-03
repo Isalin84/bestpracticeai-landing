@@ -10,6 +10,10 @@
 - `overflow: hidden` на внешнем 250vh-контейнере ломает `position: sticky` — держать его только на внутреннем sticky-блоке.
 - В Playwright `window.scrollTo` с Lenis доезжает с задержкой (Lenis сглаживает) — ждать 2–3 с и проверять `scrollY` перед скриншотом.
 
+## React
+- React-овый `onWheel` — пассивный слушатель: `preventDefault` внутри даёт сотни ошибок в консоли. Горизонтальное колесо перехватывать нативным `addEventListener('wheel', fn, { passive: false })` через ref.
+- Скролл-скраб поверх Lenis: не добавлять сильный lerp (0.18) — двойное сглаживание «отвязывает» видео от колеса; хватает 0.5.
+
 ## Инструменты
 - Playwright MCP пишет файлы только внутри корня репо/.playwright-mcp — потом переносить в scratchpad и не коммитить.
 - В zsh `grep --include=*.tsx` без кавычек падает («no matches found») — квотить паттерн.

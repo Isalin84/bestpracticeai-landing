@@ -67,9 +67,11 @@ export function HeroScrubVideo({ mode, progress }: Props) {
       if (video.readyState < 2) return
       const target = progress.get() * duration
       const delta = target - current
-      current = Math.abs(delta) < 0.02 ? target : current + delta * 0.18
+      // Lenis уже сглаживает сам скролл — здесь только лёгкое сглаживание,
+      // иначе видео заметно отстаёт от колеса и «отвязывается» от мышки
+      current = Math.abs(delta) < 0.02 ? target : current + delta * 0.5
       // Safari ставит сики в очередь — не пишем, пока предыдущий не закончился
-      if (!video.seeking && Math.abs(video.currentTime - current) >= 1 / 24) {
+      if (!video.seeking && Math.abs(video.currentTime - current) >= 1 / 48) {
         video.currentTime = current
       }
     }

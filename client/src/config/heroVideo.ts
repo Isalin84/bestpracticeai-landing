@@ -1,5 +1,5 @@
 // Фоновое видео Hero. Переключение Hero1 <-> Hero2 — поменять ACTIVE_HERO.
-export const ACTIVE_HERO: 'hero1' | 'hero2' = 'hero1'
+export const ACTIVE_HERO: 'hero1' | 'hero2' = 'hero2'
 
 export const HERO_SOURCES = {
   hero1: {

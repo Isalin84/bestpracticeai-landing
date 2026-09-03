@@ -181,23 +181,6 @@ export function Hero({ kinescopeId }: Props) {
               </button>
             </div>
 
-            {/* Trust indicators */}
-            <div style={{ display: 'flex', gap: 32, marginTop: 48, flexWrap: 'wrap' }}>
-              {[
-                { num: '500+', label: 'часов видео' },
-                { num: '2', label: 'федеральные премии' },
-                { num: '70%', label: 'экономия' },
-              ].map(item => (
-                <div key={item.label}>
-                  <div style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 24, color: 'var(--bp-gold)' }}>
-                    {item.num}
-                  </div>
-                  <div style={{ fontFamily: 'var(--bp-font-body)', fontSize: 13, color: 'rgba(250,249,246,0.7)' }}>
-                    {item.label}
-                  </div>
-                </div>
-              ))}
-            </div>
           </motion.div>
           </motion.div>
 

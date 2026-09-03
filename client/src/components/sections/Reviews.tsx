@@ -66,10 +66,32 @@ export function Reviews() {
   const review = reviews[current]
 
   return (
-    <section id="reviews" className="bp-grain" style={{ background: 'var(--bp-dark-blue)', padding: '80px 0', position: 'relative' }}>
+    <section id="reviews" className="bp-grain" style={{ background: 'var(--bp-dark-blue)', padding: '80px 0', position: 'relative', overflow: 'hidden' }}>
+      {/* Ненавязчивый фон: серверные стойки из hero-видео под плотным синим оверлеем */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: 'url(/assets/decorative/reviews-bg.webp)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center 40%',
+          opacity: 0.32,
+          pointerEvents: 'none',
+        }}
+      />
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(180deg, var(--bp-dark-blue) 0%, rgba(11,29,58,0.55) 30%, rgba(11,29,58,0.55) 70%, var(--bp-dark-blue) 100%)',
+          pointerEvents: 'none',
+        }}
+      />
       <div className="section-topline" aria-hidden="true" />
       <SectionSpotlight />
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
