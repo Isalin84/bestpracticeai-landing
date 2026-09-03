@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { AnimatedCounter } from '../ui/AnimatedCounter'
+import { DragCarousel } from '../ui/DragCarousel'
 
 const STATS = [
   { target: 500, suffix: '+', label: 'часов видеоконтента создано' },
@@ -13,7 +14,7 @@ const WHY_CARDS = [
   {
     icon: '/assets/icons/neiroset.png',
     title: 'Реальный опыт',
-    text: 'Проведение тренингов и создание видео для крупных международных компаний.',
+    text: 'Проведение тренингов по ИИ, создание корпоративных видео и разработка с помощью ИИ для крупных международных компаний.',
   },
   {
     icon: '/assets/icons/Pioneers.png',
@@ -23,7 +24,7 @@ const WHY_CARDS = [
   {
     icon: '/assets/icons/roi.png',
     title: 'Измеримые результаты',
-    text: 'Экономия до 70% на производстве контента. Качественные материалы на порядок дешевле традиционных методов.',
+    text: 'Экономия до 70% на производстве контента. Увеличение эффективности за счет созданных приложений с помощью ИИ сотрудниками после обучения.',
   },
   {
     icon: '/assets/icons/training.png',
@@ -48,13 +49,17 @@ function FadeInSection({ children, delay = 0 }: { children: React.ReactNode; del
 
 export function About() {
   return (
-    <section id="about" style={{ background: 'var(--bp-light-bg)', padding: '96px 0' }}>
+    <section id="about" style={{ background: 'var(--bp-light-bg)', padding: '80px 0', position: 'relative' }}>
+      <div className="section-topline" aria-hidden="true" />
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
 
         {/* Section heading */}
         <FadeInSection>
-          <div style={{ textAlign: 'center', marginBottom: 64 }}>
-            <h2 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 'clamp(28px, 4vw, 42px)', color: 'var(--bp-dark-blue)', marginBottom: 16 }}>
+          <div style={{ textAlign: 'center', marginBottom: 48 }}>
+            <div style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 600, fontSize: 13, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--bp-gold)', marginBottom: 14 }}>
+              О нас
+            </div>
+            <h2 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 'clamp(32px, 4.5vw, 52px)', color: 'var(--bp-dark-blue)', marginBottom: 16, letterSpacing: '-0.02em' }}>
               Best Practice AI
             </h2>
             <p style={{ fontFamily: 'var(--bp-font-body)', fontSize: 18, color: '#6b7280', maxWidth: 560, margin: '0 auto' }}>
@@ -72,7 +77,7 @@ export function About() {
               background: 'var(--bp-dark-blue)',
               borderRadius: 20,
               overflow: 'hidden',
-              marginBottom: 80,
+              marginBottom: 64,
               boxShadow: '0 24px 64px rgba(11,29,58,0.35)',
             }}
             className="stats-grid"
@@ -133,115 +138,89 @@ export function About() {
           </div>
         </FadeInSection>
 
-        {/* Why BP cards + expert photo */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }} className="about-grid">
-          <FadeInSection delay={0.2}>
+        {/* Why BP cards — карусель */}
+        <FadeInSection delay={0.2}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 24, marginBottom: 32, flexWrap: 'wrap' }}>
             <div>
-              <h3 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 28, color: 'var(--bp-dark-blue)', marginBottom: 32 }}>
+              <div style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 600, fontSize: 13, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--bp-gold)', marginBottom: 12 }}>
+                Почему мы
+              </div>
+              <h3 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 'clamp(26px, 3.2vw, 36px)', color: 'var(--bp-dark-blue)', margin: 0, letterSpacing: '-0.01em' }}>
                 Почему Best Practice?
               </h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-                {WHY_CARDS.map((card, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: i * 0.1 }}
-                    style={{
-                      display: 'flex',
-                      gap: 16,
-                      alignItems: 'flex-start',
-                      padding: 20,
-                      background: '#fff',
-                      borderRadius: 12,
-                      boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
-                    }}
-                  >
-                    <img src={card.icon} alt={card.title} style={{ width: 48, height: 48, objectFit: 'contain', flexShrink: 0 }} />
-                    <div>
-                      <h4 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 600, fontSize: 16, color: 'var(--bp-dark-blue)', marginBottom: 4 }}>
-                        {card.title}
-                      </h4>
-                      <p style={{ fontFamily: 'var(--bp-font-body)', fontSize: 14, color: '#6b7280', lineHeight: 1.6, margin: 0 }}>
-                        {card.text}
-                      </p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
             </div>
-          </FadeInSection>
-
-          {/* Expert photo */}
-          <FadeInSection delay={0.3}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24 }}>
-              <div style={{ position: 'relative' }}>
-                {/* Gold ring */}
-                <div style={{
-                  position: 'absolute', inset: -8,
-                  borderRadius: 24,
-                  border: '2px solid var(--bp-gold)',
-                  opacity: 0.4,
-                }} />
-                <img
-                  src="/assets/about/expert-ai-illustration.png"
-                  alt="Иван Салин — эксперт Best Practice AI"
-                  style={{ width: '100%', maxWidth: 420, borderRadius: 20, display: 'block', boxShadow: '0 24px 64px rgba(11,29,58,0.2)' }}
-                />
+            <p style={{ fontFamily: 'var(--bp-font-body)', fontSize: 16, color: '#6b7280', maxWidth: 420, margin: 0, lineHeight: 1.6 }}>
+              Практика вместо теории: опыт крупных компаний, федеральные премии и измеримый эффект.
+            </p>
+          </div>
+          <DragCarousel ariaLabel="Почему Best Practice" theme="light" gap={24} arrowsAlign="right">
+            {WHY_CARDS.map((card, i) => (
+              <div key={i} className="why-card">
+                <div className="why-card__icon">
+                  <img src={card.icon} alt="" style={{ width: 44, height: 44, objectFit: 'contain' }} draggable={false} />
+                </div>
+                <div className="why-card__num" aria-hidden="true">0{i + 1}</div>
+                <h4 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 21, color: 'var(--bp-dark-blue)', margin: '0 0 12px', lineHeight: 1.25 }}>
+                  {card.title}
+                </h4>
+                <p style={{ fontFamily: 'var(--bp-font-body)', fontSize: 15.5, color: '#4b5563', lineHeight: 1.65, margin: 0 }}>
+                  {card.text}
+                </p>
               </div>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 20, color: 'var(--bp-dark-blue)', marginBottom: 4 }}>
-                  Иван Салин
-                </div>
-                <div style={{ fontFamily: 'var(--bp-font-body)', fontSize: 15, color: '#6b7280', marginBottom: 20 }}>
-                  Основатель Best Practice
-                </div>
-                <div style={{ fontFamily: 'var(--bp-font-body)', fontSize: 13, color: '#9ca3af', marginBottom: 8 }}>
-                  Узнать больше об Иване
-                </div>
-                <a
-                  href="https://www.salinsafety.ru/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 6,
-                    fontFamily: 'var(--bp-font-heading)',
-                    fontWeight: 600,
-                    fontSize: 13,
-                    color: 'var(--bp-dark-blue)',
-                    textDecoration: 'none',
-                    border: '1.5px solid var(--bp-dark-blue)',
-                    borderRadius: 6,
-                    padding: '8px 18px',
-                    transition: 'all 0.2s',
-                  }}
-                  onMouseEnter={e => {
-                    (e.currentTarget as HTMLAnchorElement).style.background = 'var(--bp-dark-blue)'
-                    ;(e.currentTarget as HTMLAnchorElement).style.color = 'var(--bp-gold)'
-                  }}
-                  onMouseLeave={e => {
-                    (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'
-                    ;(e.currentTarget as HTMLAnchorElement).style.color = 'var(--bp-dark-blue)'
-                  }}
-                >
-                  salinsafety.ru
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M1 11 L11 1 M11 1 H5 M11 1 V7" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </FadeInSection>
-        </div>
+            ))}
+          </DragCarousel>
+        </FadeInSection>
       </div>
 
       <style>{`
         @media (max-width: 768px) {
           .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
-          .about-grid { grid-template-columns: 1fr !important; }
+        }
+        .why-card {
+          position: relative;
+          width: clamp(300px, 34vw, 440px);
+          padding: 36px 32px 32px;
+          background: #fff;
+          border-radius: 20px;
+          border: 1px solid rgba(11,29,58,0.06);
+          box-shadow: var(--bp-shadow-card);
+          display: flex;
+          flex-direction: column;
+          box-sizing: border-box;
+          transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+          user-select: none;
+        }
+        .why-card::before {
+          content: '';
+          position: absolute;
+          top: 0; left: 32px; right: 32px;
+          height: 3px;
+          border-radius: 0 0 4px 4px;
+          background: linear-gradient(90deg, var(--bp-gold), var(--bp-soft-gold));
+          opacity: 0.85;
+        }
+        .why-card:hover {
+          transform: translateY(-6px);
+          border-color: rgba(212,175,55,0.45);
+          box-shadow: var(--bp-shadow-card-hover), 0 0 40px rgba(212,175,55,0.12);
+        }
+        .why-card__icon {
+          width: 72px; height: 72px;
+          border-radius: 18px;
+          background: radial-gradient(circle at 30% 25%, rgba(212,175,55,0.22), rgba(212,175,55,0.06));
+          border: 1px solid rgba(212,175,55,0.3);
+          display: flex; align-items: center; justify-content: center;
+          margin-bottom: 24px;
+        }
+        .why-card__num {
+          position: absolute;
+          top: 28px; right: 28px;
+          font-family: var(--bp-font-heading);
+          font-weight: 700;
+          font-size: 40px;
+          line-height: 1;
+          color: transparent;
+          -webkit-text-stroke: 1px rgba(11,29,58,0.18);
         }
       `}</style>
     </section>

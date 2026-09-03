@@ -83,7 +83,8 @@ export function Media() {
   }
 
   return (
-    <section id="media" style={{ background: 'var(--bp-light-bg)', padding: '96px 0' }}>
+    <section id="media" style={{ background: 'var(--bp-light-bg)', padding: '80px 0', position: 'relative' }}>
+      <div className="section-topline" aria-hidden="true" />
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
 
         <motion.div
@@ -91,9 +92,12 @@ export function Media() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          style={{ textAlign: 'center', marginBottom: 64 }}
+          style={{ textAlign: 'center', marginBottom: 48 }}
         >
-          <h2 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 'clamp(28px, 4vw, 42px)', color: 'var(--bp-dark-blue)', marginBottom: 16 }}>
+          <div style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 600, fontSize: 13, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--bp-gold)', marginBottom: 14 }}>
+            Блог
+          </div>
+          <h2 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 'clamp(32px, 4.5vw, 52px)', letterSpacing: '-0.02em', color: 'var(--bp-dark-blue)', marginBottom: 16 }}>
             Медиа
           </h2>
           <p style={{ fontFamily: 'var(--bp-font-body)', fontSize: 18, color: '#6b7280' }}>

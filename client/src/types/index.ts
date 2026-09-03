@@ -44,6 +44,39 @@ export interface PortfolioVideo {
   created_at: string
 }
 
+export interface ServiceBlock {
+  heading: string
+  items: string[]
+}
+
+export interface ServiceFaq {
+  q: string
+  a: string
+}
+
+export interface ServicePortfolioItem {
+  name: string
+  description: string
+  href?: string
+}
+
+export interface Service {
+  slug: string
+  name: string
+  title: string
+  description: string
+  hero_subtitle: string
+  card_image: string
+  card_num: string
+  card_description: string
+  blocks: ServiceBlock[]
+  faq: ServiceFaq[]
+  portfolio: ServicePortfolioItem[]
+  sort_order: number
+  published: boolean
+  updated_at?: string
+}
+
 export interface Settings {
   [key: string]: string
 }

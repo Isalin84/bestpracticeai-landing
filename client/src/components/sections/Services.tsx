@@ -1,51 +1,77 @@
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { TiltCard } from '../ui/TiltCard'
+import { DragCarousel } from '../ui/DragCarousel'
 import { SectionSpotlight } from '../ui/SectionSpotlight'
+import { api } from '../../api/client'
 
-const SERVICES = [
+interface ServiceCardData {
+  slug: string
+  image: string
+  title: string
+  description: string
+  num: string
+}
+
+// Карточки-фолбэк до загрузки из CMS (таблица services)
+const SERVICES: ServiceCardData[] = [
   {
     slug: 'corporate-ai-video',
-    icon: '/assets/icons/icon-corporate-video.png',
-    title: 'Создание корпоративных видеороликов',
+    image: '/assets/services/service-01-corporate-ai-video.webp',
+    title: 'Создание корпоративных видео',
     description: 'Обучающие ролики, инструктажи, онбординг и промо с вашим AI-аватаром',
     num: '01',
   },
   {
     slug: 'ai-video-training',
-    icon: '/assets/icons/icon-video-training.png',
-    title: 'Обучение созданию корпоративных обучающих роликов с помощью ИИ',
-    description: 'От базы знаний до кастомного аватара, музыки и спецэффектов — через доступные AI-инструменты',
+    image: '/assets/services/service-02-ai-video-training.webp',
+    title: 'Обучение созданию корпоративных видео с помощью ИИ',
+    description: 'От базы знаний до кастомного аватара, музыки и спецэффектов',
     num: '02',
   },
   {
     slug: 'neural-networks-training',
-    icon: '/assets/icons/icon-neural-training.png',
-    title: 'Обучение использованию генеративного ИИ в работе и жизни',
+    image: '/assets/services/service-03-neural-networks-training.webp',
+    title: 'Генеративный ИИ в работе и в жизни',
     description: 'Групповые и индивидуальные занятия — от промптинга до создания ИИ-агентов',
     num: '03',
   },
   {
     slug: 'vibecoding',
-    icon: '/assets/icons/icon-vibecoding.png',
-    title: 'Вайбкодинг & боты',
-    description: 'Создаём Telegram-ботов с ИИ, лендинги и обучаем программировать с помощью AI',
+    image: '/assets/services/service-04-vibecoding.webp',
+    title: 'Разработка с помощью ИИ',
+    description: 'Telegram-боты с ИИ, лендинги, приложения и обучение вайбкодингу',
     num: '04',
   },
   {
     slug: 'additional',
-    icon: '/assets/icons/icon-additional.png',
+    image: '/assets/services/service-05-additional.webp',
     title: 'Дополнительные услуги',
     description: 'Брендбук, нейрофотосессии, генерация музыки, персональные видеоаватары',
     num: '05',
   },
 ]
 
-const CARD_WIDTH = 'calc(33.333% - 16px)'
-
 export function Services() {
+  const [services, setServices] = useState<ServiceCardData[]>(SERVICES)
+
+  useEffect(() => {
+    api.getServices()
+      .then(list => {
+        if (list.length === 0) return
+        setServices(list.map((s, i) => ({
+          slug: s.slug,
+          image: s.card_image || SERVICES[i]?.image || SERVICES[0].image,
+          title: s.name,
+          description: s.card_description || s.description,
+          num: s.card_num || String(i + 1).padStart(2, '0'),
+        })))
+      })
+      .catch(() => {})
+  }, [])
+
   return (
-    <section id="services" style={{ background: 'var(--bp-dark-blue)', padding: '96px 0', position: 'relative' }}>
+    <section id="services" className="bp-grain" style={{ background: 'var(--bp-dark-blue)', padding: '80px 0', position: 'relative' }}>
       <div className="section-topline" aria-hidden="true" />
       <SectionSpotlight />
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
@@ -55,7 +81,7 @@ export function Services() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          style={{ textAlign: 'center', marginBottom: 64 }}
+          style={{ textAlign: 'center', marginBottom: 48 }}
         >
           <div style={{
             fontFamily: 'var(--bp-font-heading)',
@@ -68,7 +94,7 @@ export function Services() {
           }}>
             Best Practice AI
           </div>
-          <h2 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 'clamp(28px, 4vw, 42px)', color: '#fff', marginBottom: 16 }}>
+          <h2 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 'clamp(32px, 4.5vw, 52px)', color: '#fff', marginBottom: 16 }}>
             Наши услуги
           </h2>
           <p style={{ fontFamily: 'var(--bp-font-body)', fontSize: 18, color: 'rgba(250,249,246,0.7)', maxWidth: 600, margin: '0 auto' }}>
@@ -76,173 +102,156 @@ export function Services() {
           </p>
         </motion.div>
 
-        {/* Row 1: 3 cards */}
-        <div style={{ display: 'flex', gap: 24, marginBottom: 24 }} className="services-row">
-          {SERVICES.slice(0, 3).map((service, i) => (
-            <ServiceCard key={service.slug} service={service} index={i} cardWidth={CARD_WIDTH} />
-          ))}
-        </div>
-
-        {/* Row 2: 2 cards centered */}
-        <div style={{ display: 'flex', gap: 24, justifyContent: 'center' }} className="services-row">
-          {SERVICES.slice(3).map((service, i) => (
-            <ServiceCard key={service.slug} service={service} index={i + 3} cardWidth={CARD_WIDTH} />
-          ))}
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          <DragCarousel ariaLabel="Услуги" theme="dark" gap={28}>
+            {services.map(service => (
+              <ServiceCard key={service.slug} service={service} />
+            ))}
+          </DragCarousel>
+        </motion.div>
       </div>
 
       <style>{`
-        @media (max-width: 1024px) {
-          .services-row { flex-wrap: wrap !important; }
-          .services-row > * { flex: 0 0 calc(50% - 12px) !important; min-width: 0 !important; }
-        }
-        @media (max-width: 640px) {
-          .services-row > * { flex: 0 0 100% !important; }
-        }
-        .service-card-inner {
+        .service-photo-card {
           position: relative;
-          background: linear-gradient(160deg, rgba(42,79,122,0.45) 0%, rgba(30,58,95,0.35) 40%, rgba(11,29,58,0.6) 100%);
-          border-radius: 16px;
-          padding: 36px 28px 32px;
-          height: 100%;
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-          cursor: pointer;
+          width: clamp(280px, 30vw, 420px);
+          aspect-ratio: 3 / 4;
+          border-radius: 20px;
           overflow: hidden;
-          transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
-          box-sizing: border-box;
-          box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+          display: block;
+          text-decoration: none;
+          background: var(--bp-steel-blue);
+          box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          -webkit-user-drag: none;
         }
-        .service-card-inner::before {
+        .service-photo-card::before {
           content: '';
           position: absolute;
           inset: 0;
-          border-radius: 16px;
+          border-radius: 20px;
           padding: 1px;
-          background: linear-gradient(160deg, rgba(212,175,55,0.55), rgba(212,175,55,0.1) 45%, rgba(212,175,55,0.3));
+          background: linear-gradient(160deg, rgba(212,175,55,0.55), rgba(212,175,55,0.08) 45%, rgba(212,175,55,0.3));
           -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           -webkit-mask-composite: xor;
           mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           mask-composite: exclude;
           pointer-events: none;
-          transition: opacity 0.25s ease;
+          z-index: 3;
+          transition: opacity 0.3s ease;
         }
-        .service-card-inner:hover {
-          transform: translateY(-4px);
-          background: linear-gradient(160deg, rgba(42,79,122,0.6) 0%, rgba(30,58,95,0.5) 40%, rgba(11,29,58,0.7) 100%);
-          box-shadow: 0 24px 64px rgba(0,0,0,0.45), 0 0 40px rgba(212,175,55,0.12);
+        .service-photo-card:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 28px 72px rgba(0,0,0,0.5), 0 0 48px rgba(212,175,55,0.14);
         }
-        .service-card-inner:hover::before {
-          background: linear-gradient(160deg, rgba(212,175,55,0.9), rgba(212,175,55,0.25) 45%, rgba(212,175,55,0.55));
+        .service-photo-card:hover::before {
+          background: linear-gradient(160deg, rgba(212,175,55,0.95), rgba(212,175,55,0.25) 45%, rgba(212,175,55,0.6));
         }
-        .service-card-inner:hover .service-arrow {
-          transform: translateX(4px);
-        }
-        .service-card-inner:hover .service-more {
-          color: var(--bp-soft-gold);
-        }
-        .service-card-inner:hover .service-icon-img {
-          filter: drop-shadow(0 0 16px rgba(212,175,55,0.55));
-        }
-        .service-arrow {
-          transition: transform 0.2s ease;
-        }
-        .service-num-watermark {
+        .service-photo-card__img {
           position: absolute;
-          top: 18px;
-          left: 22px;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.5s ease;
+          user-select: none;
+          -webkit-user-drag: none;
+          pointer-events: none;
+        }
+        .service-photo-card:hover .service-photo-card__img {
+          transform: scale(1.05);
+        }
+        .service-photo-card__scrim {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          background: linear-gradient(180deg, rgba(11,29,58,0.25) 0%, rgba(11,29,58,0) 32%, rgba(11,29,58,0) 46%, rgba(11,29,58,0.88) 88%);
+          pointer-events: none;
+        }
+        .service-photo-card__num {
+          position: absolute;
+          top: 20px;
+          left: 24px;
+          z-index: 2;
           font-family: var(--bp-font-heading);
           font-weight: 700;
-          font-size: 68px;
+          font-size: 64px;
           line-height: 1;
           color: transparent;
-          -webkit-text-stroke: 1px rgba(212,175,55,0.3);
-          pointer-events: none;
+          -webkit-text-stroke: 1px rgba(212,175,55,0.55);
           user-select: none;
         }
-        .service-icon-img {
-          filter: drop-shadow(0 0 12px rgba(212,175,55,0.35));
-          transition: filter 0.25s ease;
+        .service-photo-card__body {
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 2;
+          padding: 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
         }
+        .service-photo-card__more .service-arrow { transition: transform 0.2s ease; }
+        .service-photo-card:hover .service-arrow { transform: translateX(4px); }
       `}</style>
     </section>
   )
 }
 
-function ServiceCard({ service, index, cardWidth }: {
-  service: typeof SERVICES[0]
-  index: number
-  cardWidth: string
-}) {
+function ServiceCard({ service }: { service: ServiceCardData }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.08 }}
-      style={{ flex: `0 0 ${cardWidth}`, minWidth: 0 }}
-    >
-      <Link to={`/services/${service.slug}`} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
-        <TiltCard style={{ height: '100%' }}>
-        <div className="service-card-inner" style={{ transformStyle: 'preserve-3d' }}>
-          <span className="service-num-watermark" aria-hidden="true">{service.num}</span>
-
-          {/* Icon row */}
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-end' }}>
-            <div style={{
-              width: 64, height: 64,
-              background: 'radial-gradient(circle at 30% 25%, rgba(212,175,55,0.35), rgba(212,175,55,0.08))',
-              border: '1px solid rgba(212,175,55,0.35)',
-              borderRadius: 16,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              flexShrink: 0,
-              transform: 'translateZ(28px)',
-            }}>
-              <img src={service.icon} alt={service.title} className="service-icon-img" style={{ width: 42, height: 42, objectFit: 'contain' }} />
-            </div>
-          </div>
-
-          <h3 style={{
-            fontFamily: 'var(--bp-font-heading)',
-            fontWeight: 600,
-            fontSize: 19,
-            color: '#fff',
-            lineHeight: 1.3,
-            margin: 0,
-          }}>
-            {service.title}
-          </h3>
-
-          <p style={{
-            fontFamily: 'var(--bp-font-body)',
-            fontSize: 14,
-            color: 'rgba(250,249,246,0.72)',
-            lineHeight: 1.65,
-            flex: 1,
-            margin: 0,
-          }}>
-            {service.description}
-          </p>
-
-          <div className="service-more" style={{
-            fontFamily: 'var(--bp-font-heading)',
-            fontWeight: 600,
-            fontSize: 14,
-            color: 'var(--bp-gold)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 6,
-            paddingTop: 8,
-            borderTop: '1px solid rgba(212,175,55,0.18)',
-            transition: 'color 0.2s ease',
-          }}>
-            Подробнее
-            <span className="service-arrow">→</span>
-          </div>
+    <Link to={`/services/${service.slug}`} className="service-photo-card" draggable={false}>
+      <img
+        src={service.image}
+        alt={service.title}
+        className="service-photo-card__img"
+        loading="lazy"
+        draggable={false}
+      />
+      <div className="service-photo-card__scrim" aria-hidden="true" />
+      <span className="service-photo-card__num" aria-hidden="true">{service.num}</span>
+      <div className="service-photo-card__body">
+        <h3 style={{
+          fontFamily: 'var(--bp-font-heading)',
+          fontWeight: 600,
+          fontSize: 'clamp(18px, 1.6vw, 22px)',
+          color: '#fff',
+          lineHeight: 1.3,
+          margin: 0,
+          textShadow: '0 2px 12px rgba(11,29,58,0.8)',
+        }}>
+          {service.title}
+        </h3>
+        <p style={{
+          fontFamily: 'var(--bp-font-body)',
+          fontSize: 14,
+          color: 'rgba(250,249,246,0.78)',
+          lineHeight: 1.55,
+          margin: 0,
+        }}>
+          {service.description}
+        </p>
+        <div className="service-photo-card__more" style={{
+          fontFamily: 'var(--bp-font-heading)',
+          fontWeight: 600,
+          fontSize: 14,
+          color: 'var(--bp-gold)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+          paddingTop: 10,
+          borderTop: '1px solid rgba(212,175,55,0.22)',
+        }}>
+          Подробнее
+          <span className="service-arrow">→</span>
         </div>
-        </TiltCard>
-      </Link>
-    </motion.div>
+      </div>
+    </Link>
   )
 }

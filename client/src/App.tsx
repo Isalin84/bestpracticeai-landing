@@ -19,12 +19,9 @@ import { AdminArticles } from './pages/admin/AdminArticles'
 import { AdminReviews } from './pages/admin/AdminReviews'
 import { AdminPortfolio } from './pages/admin/AdminPortfolio'
 import { AdminSettings } from './pages/admin/AdminSettings'
+import { AdminServices } from './pages/admin/AdminServices'
 
-const CorporateAiVideo = lazy(() => import('./pages/services/CorporateAiVideo').then(m => ({ default: m.CorporateAiVideo })))
-const AiVideoTraining = lazy(() => import('./pages/services/AiVideoTraining').then(m => ({ default: m.AiVideoTraining })))
-const NeuralNetworksTraining = lazy(() => import('./pages/services/NeuralNetworksTraining').then(m => ({ default: m.NeuralNetworksTraining })))
-const Vibecoding = lazy(() => import('./pages/services/Vibecoding').then(m => ({ default: m.Vibecoding })))
-const Additional = lazy(() => import('./pages/services/Additional').then(m => ({ default: m.Additional })))
+const ServicePage = lazy(() => import('./pages/services/ServicePage').then(m => ({ default: m.ServicePage })))
 
 function PublicLayout() {
   useYandexMetrika()
@@ -57,16 +54,7 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: 'blog/:slug', element: <ArticlePage /> },
       { path: 'privacy', element: <PrivacyPage /> },
-      {
-        path: 'services',
-        children: [
-          { path: 'corporate-ai-video', element: <Suspense fallback={<ServiceFallback />}><CorporateAiVideo /></Suspense> },
-          { path: 'ai-video-training', element: <Suspense fallback={<ServiceFallback />}><AiVideoTraining /></Suspense> },
-          { path: 'neural-networks-training', element: <Suspense fallback={<ServiceFallback />}><NeuralNetworksTraining /></Suspense> },
-          { path: 'vibecoding', element: <Suspense fallback={<ServiceFallback />}><Vibecoding /></Suspense> },
-          { path: 'additional', element: <Suspense fallback={<ServiceFallback />}><Additional /></Suspense> },
-        ],
-      },
+      { path: 'services/:slug', element: <Suspense fallback={<ServiceFallback />}><ServicePage /></Suspense> },
       { path: '*', element: <NotFound /> },
     ],
   },
@@ -81,6 +69,7 @@ const router = createBrowserRouter([
       { path: 'articles', element: <AdminArticles /> },
       { path: 'reviews', element: <AdminReviews /> },
       { path: 'portfolio', element: <AdminPortfolio /> },
+      { path: 'services', element: <AdminServices /> },
       { path: 'settings', element: <AdminSettings /> },
     ],
   },

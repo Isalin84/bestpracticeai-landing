@@ -1,70 +1,37 @@
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { motion } from 'framer-motion'
+import type { ServiceFaq } from '../../types'
 
-const SERVICE_NAMES: Record<string, string> = {
-  'corporate-ai-video': 'Создание корпоративных видеороликов',
-  'ai-video-training': 'Обучение созданию обучающих роликов',
-  'neural-networks-training': 'Обучение генеративному ИИ',
-  'vibecoding': 'Вайбкодинг & боты',
-  'additional': 'Дополнительные услуги',
-}
-
-// Синхронизировано с server/routes/seo.ts (SSR-версии страниц для поисковиков)
-const SERVICE_SEO: Record<string, { title: string; description: string }> = {
-  'corporate-ai-video': {
-    title: 'Создание корпоративных видеороликов с ИИ — заказать | Best Practice AI',
-    description: 'Обучающие видео, инструктажи, онбординг и промо-ролики с ИИ-аватарами. Экономия до 70% на производстве корпоративного видеоконтента.',
-  },
-  'ai-video-training': {
-    title: 'Обучение созданию обучающих роликов с помощью ИИ | Best Practice AI',
-    description: 'Научим создавать корпоративные обучающие ролики с AI-аватарами самостоятельно: от базы знаний до кастомного аватара, музыки и спецэффектов.',
-  },
-  'neural-networks-training': {
-    title: 'Обучение генеративному ИИ для работы и жизни | Best Practice AI',
-    description: 'Групповые и индивидуальные занятия: промптинг, выбор нейросетей, ИИ-ассистенты, агенты, вайбкодинг. Практика без теоретической воды.',
-  },
-  'vibecoding': {
-    title: 'Разработка Telegram-ботов с ИИ и вайбкодинг — заказать | Best Practice AI',
-    description: 'Разработка Telegram-ботов с ИИ, лендингов и цифровых продуктов методом вайбкодинга. Быстро и без раздутых бюджетов. Обучение вайбкодингу.',
-  },
-  'additional': {
-    title: 'Нейрофотосессии, ИИ-музыка, брендбук, видеоаватары | Best Practice AI',
-    description: 'Создание брендбука, нейрофотосессии, генерация музыки, персональные видеоаватары — генеративные нейросети под вашу задачу.',
-  },
-}
-
-export interface FaqItem {
-  q: string
-  a: string
-}
+export type FaqItem = ServiceFaq
 
 interface Props {
   slug: string
-  heroTitle: string
+  name: string
+  seoTitle: string
+  seoDescription: string
   heroSubtitle: string
   ctaLabel?: string
   faq?: FaqItem[]
   children: React.ReactNode
 }
 
-export function ServiceLayout({ slug, heroTitle, heroSubtitle, ctaLabel = 'Оставить заявку', faq, children }: Props) {
+export function ServiceLayout({ slug, name, seoTitle, seoDescription, heroSubtitle, ctaLabel = 'Оставить заявку', faq, children }: Props) {
   const scrollToContacts = () => {
     window.location.href = '/#contacts'
   }
 
   const canonical = `https://bestpracticeai.ru/services/${slug}`
-  const seo = SERVICE_SEO[slug] || { title: `${heroTitle} — Best Practice AI`, description: heroSubtitle }
 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
       {
         '@type': 'Service',
-        name: SERVICE_NAMES[slug] || heroTitle,
-        description: seo.description,
+        name,
+        description: seoDescription,
         url: canonical,
-        serviceType: SERVICE_NAMES[slug] || heroTitle,
+        serviceType: name,
         areaServed: 'RU',
         provider: {
           '@type': 'Organization',
@@ -79,7 +46,7 @@ export function ServiceLayout({ slug, heroTitle, heroSubtitle, ctaLabel = 'Ос�
         itemListElement: [
           { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://bestpracticeai.ru/' },
           { '@type': 'ListItem', position: 2, name: 'Услуги', item: 'https://bestpracticeai.ru/#services' },
-          { '@type': 'ListItem', position: 3, name: SERVICE_NAMES[slug] || heroTitle, item: canonical },
+          { '@type': 'ListItem', position: 3, name, item: canonical },
         ],
       },
       ...(faq && faq.length > 0
@@ -98,11 +65,11 @@ export function ServiceLayout({ slug, heroTitle, heroSubtitle, ctaLabel = 'Ос�
   return (
     <div style={{ paddingTop: 72, minHeight: '100vh' }}>
       <Helmet>
-        <title>{seo.title}</title>
-        <meta name="description" content={seo.description} />
+        <title>{seoTitle}</title>
+        <meta name="description" content={seoDescription} />
         <link rel="canonical" href={canonical} />
-        <meta property="og:title" content={seo.title} />
-        <meta property="og:description" content={seo.description} />
+        <meta property="og:title" content={seoTitle} />
+        <meta property="og:description" content={seoDescription} />
         <meta property="og:url" content={canonical} />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://bestpracticeai.ru/assets/og/OG.jpg" />
@@ -114,21 +81,22 @@ export function ServiceLayout({ slug, heroTitle, heroSubtitle, ctaLabel = 'Ос�
         <span>→</span>
         <Link to="/#services" style={{ color: '#9ca3af', textDecoration: 'none' }}>Услуги</Link>
         <span>→</span>
-        <span style={{ color: 'var(--bp-dark-blue)' }}>{SERVICE_NAMES[slug]}</span>
+        <span style={{ color: 'var(--bp-dark-blue)' }}>{name}</span>
       </div>
 
       {/* Hero */}
-      <section style={{ background: 'linear-gradient(135deg, var(--bp-dark-blue), var(--bp-steel-blue))', padding: '72px 24px' }}>
-        <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
+      <section className="bp-grain" style={{ position: 'relative', background: 'linear-gradient(135deg, var(--bp-dark-blue), var(--bp-steel-blue))', padding: '72px 24px' }}>
+        <div className="section-topline" aria-hidden="true" />
+        <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center', position: 'relative' }}>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 'clamp(28px,4vw,48px)', color: '#fff', lineHeight: 1.2, marginBottom: 20 }}>
-              {heroTitle}
+            <h1 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 'clamp(30px,4.5vw,52px)', color: '#fff', lineHeight: 1.15, marginBottom: 20, letterSpacing: '-0.02em' }}>
+              {name}
             </h1>
-            <p style={{ fontFamily: 'var(--bp-font-body)', fontSize: 18, color: 'rgba(250,249,246,0.75)', lineHeight: 1.7, maxWidth: 680, margin: '0 auto 36px' }}>
+            <p style={{ fontFamily: 'var(--bp-font-body)', fontSize: 18, color: 'rgba(250,249,246,0.78)', lineHeight: 1.7, maxWidth: 680, margin: '0 auto 36px' }}>
               {heroSubtitle}
             </p>
             <button onClick={scrollToContacts} className="btn-primary">
@@ -234,13 +202,14 @@ export function ServiceLayout({ slug, heroTitle, heroSubtitle, ctaLabel = 'Ос�
       )}
 
       {/* Final CTA */}
-      <section style={{ background: 'var(--bp-dark-blue)', padding: '72px 24px', textAlign: 'center' }}>
+      <section className="bp-grain" style={{ position: 'relative', background: 'var(--bp-dark-blue)', padding: '72px 24px', textAlign: 'center' }}>
+        <div className="section-topline" aria-hidden="true" />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          style={{ maxWidth: 600, margin: '0 auto' }}
+          style={{ maxWidth: 600, margin: '0 auto', position: 'relative' }}
         >
           <h2 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 'clamp(24px,3vw,36px)', color: '#fff', marginBottom: 16 }}>
             Готовы начать?

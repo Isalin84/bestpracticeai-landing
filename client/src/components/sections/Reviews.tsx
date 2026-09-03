@@ -66,7 +66,7 @@ export function Reviews() {
   const review = reviews[current]
 
   return (
-    <section id="reviews" style={{ background: 'var(--bp-dark-blue)', padding: '96px 0', position: 'relative' }}>
+    <section id="reviews" className="bp-grain" style={{ background: 'var(--bp-dark-blue)', padding: '80px 0', position: 'relative' }}>
       <div className="section-topline" aria-hidden="true" />
       <SectionSpotlight />
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
@@ -76,9 +76,12 @@ export function Reviews() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          style={{ textAlign: 'center', marginBottom: 64 }}
+          style={{ textAlign: 'center', marginBottom: 48 }}
         >
-          <h2 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 'clamp(28px, 4vw, 42px)', color: '#fff', marginBottom: 16 }}>
+          <div style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 600, fontSize: 13, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--bp-gold)', marginBottom: 14 }}>
+            Отзывы
+          </div>
+          <h2 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 'clamp(32px, 4.5vw, 52px)', letterSpacing: '-0.02em', color: '#fff', marginBottom: 16 }}>
             Что говорят клиенты
           </h2>
           <p style={{ fontFamily: 'var(--bp-font-body)', fontSize: 18, color: 'rgba(250,249,246,0.6)' }}>

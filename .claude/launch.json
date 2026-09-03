@@ -7,6 +7,13 @@
       "runtimeArgs": ["run", "dev", "--", "--port", "5173"],
       "cwd": "client",
       "port": 5173
+    },
+    {
+      "name": "backend",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["tsx", "index.ts"],
+      "cwd": "server",
+      "port": 3001
     }
   ]
 }

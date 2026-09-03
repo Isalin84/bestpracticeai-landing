@@ -2,6 +2,7 @@ import Database from 'better-sqlite3'
 import { readFileSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
+import { seedServices } from './services.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -17,6 +18,7 @@ export function getDb(): Database.Database {
     // Initialize schema
     const schema = readFileSync(join(__dirname, 'schema.sql'), 'utf-8')
     db.exec(schema)
+    seedServices(db)
   }
   return db
 }

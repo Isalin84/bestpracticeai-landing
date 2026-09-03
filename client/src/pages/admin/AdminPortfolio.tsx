@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react'
 import { api } from '../../api/client'
 import type { PortfolioVideo } from '../../types'
 
-const SERVICES = [
-  { value: 'corporate-ai-video', label: 'Создание корпоративных видеороликов' },
-  { value: 'ai-video-training', label: 'Обучение созданию обучающих роликов' },
-  { value: 'neural-networks-training', label: 'Обучение генеративному ИИ' },
-  { value: 'vibecoding', label: 'Вайбкодинг' },
+// Фолбэк, пока не загрузился список из CMS
+const SERVICES_FALLBACK = [
+  { value: 'corporate-ai-video', label: 'Создание корпоративных видео' },
+  { value: 'ai-video-training', label: 'Обучение созданию корпоративных видео с помощью ИИ' },
+  { value: 'neural-networks-training', label: 'Генеративный ИИ в работе и в жизни' },
+  { value: 'vibecoding', label: 'Разработка с помощью ИИ' },
   { value: 'additional', label: 'Дополнительные услуги' },
 ]
 
@@ -17,8 +18,14 @@ export function AdminPortfolio() {
   const [editing, setEditing] = useState<Partial<PortfolioVideo> | null>(null)
   const [saving, setSaving] = useState(false)
   const [previewId, setPreviewId] = useState('')
+  const [SERVICES, setServices] = useState(SERVICES_FALLBACK)
 
-  useEffect(() => { api.adminGetPortfolio().then(setVideos).catch(() => {}) }, [])
+  useEffect(() => {
+    api.adminGetPortfolio().then(setVideos).catch(() => {})
+    api.adminGetServices()
+      .then(list => setServices(list.map(s => ({ value: s.slug, label: s.name }))))
+      .catch(() => {})
+  }, [])
 
   const save = async () => {
     if (!editing) return

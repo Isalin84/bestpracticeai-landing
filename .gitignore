@@ -40,3 +40,6 @@ Thumbs.db
 # SQLite WAL/SHM (live data)
 *.db-shm
 *.db-wal
+
+# Playwright MCP artefacts
+.playwright-mcp/

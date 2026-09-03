@@ -27,6 +27,10 @@ export const api = {
     request<import('../types').PortfolioVideo[]>(`/portfolio?service_slug=${serviceSlug}`),
   getSettings: () =>
     request<import('../types').Settings>('/settings'),
+  getServices: () =>
+    request<import('../types').Service[]>('/services'),
+  getService: (slug: string) =>
+    request<import('../types').Service>(`/services/${slug}`),
   submitLead: (data: Omit<import('../types').LeadFormData, 'consent'>) =>
     request<{ message: string }>('/leads', {
       method: 'POST',
@@ -79,6 +83,16 @@ export const api = {
     request<import('../types').PortfolioVideo>(`/portfolio/admin/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   adminDeleteVideo: (id: number) =>
     request<{ message: string }>(`/portfolio/admin/${id}`, { method: 'DELETE' }),
+
+  // Admin services
+  adminGetServices: () =>
+    request<import('../types').Service[]>('/services/admin/all'),
+  adminCreateService: (data: Partial<import('../types').Service>) =>
+    request<import('../types').Service>('/services/admin', { method: 'POST', body: JSON.stringify(data) }),
+  adminUpdateService: (slug: string, data: Partial<import('../types').Service>) =>
+    request<import('../types').Service>(`/services/admin/${slug}`, { method: 'PUT', body: JSON.stringify(data) }),
+  adminDeleteService: (slug: string) =>
+    request<{ message: string }>(`/services/admin/${slug}`, { method: 'DELETE' }),
 
   // Admin settings
   adminUpdateSetting: (key: string, value: string) =>

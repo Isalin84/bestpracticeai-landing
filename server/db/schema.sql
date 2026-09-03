@@ -44,6 +44,24 @@ CREATE TABLE IF NOT EXISTS portfolio_videos (
   created_at   DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Контент страниц услуг (редактируется в админке; сид из server/data/servicesFallback.ts)
+CREATE TABLE IF NOT EXISTS services (
+  slug             TEXT PRIMARY KEY,
+  name             TEXT NOT NULL,
+  seo_title        TEXT NOT NULL,
+  seo_description  TEXT NOT NULL,
+  hero_subtitle    TEXT NOT NULL DEFAULT '',
+  card_image       TEXT,
+  card_num         TEXT,
+  card_description TEXT NOT NULL DEFAULT '',
+  blocks           TEXT NOT NULL DEFAULT '[]',
+  faq              TEXT NOT NULL DEFAULT '[]',
+  portfolio        TEXT NOT NULL DEFAULT '[]',
+  sort_order       INTEGER DEFAULT 0,
+  published        INTEGER DEFAULT 1,
+  updated_at       DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS settings (
   key   TEXT PRIMARY KEY,
   value TEXT

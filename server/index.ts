@@ -9,6 +9,7 @@ import { reviewsRouter } from './routes/reviews.js'
 import { leadsRouter } from './routes/leads.js'
 import { portfolioRouter } from './routes/portfolio.js'
 import { settingsRouter } from './routes/settings.js'
+import { servicesRouter } from './routes/services.js'
 import { seoRouter } from './routes/seo.js'
 
 const app = express()
@@ -41,6 +42,7 @@ app.use('/api/reviews', reviewsRouter)
 app.use('/api/leads', leadsRouter)
 app.use('/api/portfolio', portfolioRouter)
 app.use('/api/settings', settingsRouter)
+app.use('/api/services', servicesRouter)
 
 app.get('/health', (req, res) => res.json({ ok: true, env: process.env.NODE_ENV }))
 
