@@ -72,7 +72,7 @@ export function ArticlePage() {
         <div style={{ maxWidth: 800, margin: '0 auto', padding: '24px 24px 0', display: 'flex', gap: 8, alignItems: 'center', fontFamily: 'var(--bp-font-body)', fontSize: 13, color: '#9ca3af' }}>
           <Link to="/" style={{ color: '#9ca3af', textDecoration: 'none' }}>Главная</Link>
           <span>→</span>
-          <Link to="/#media" style={{ color: '#9ca3af', textDecoration: 'none' }}>Медиа</Link>
+          <Link to="/#media" style={{ color: '#9ca3af', textDecoration: 'none' }}>Блог</Link>
           <span>→</span>
           <span style={{ color: 'var(--bp-dark-blue)' }}>{article.title}</span>
         </div>

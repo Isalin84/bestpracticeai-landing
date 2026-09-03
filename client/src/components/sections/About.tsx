@@ -2,7 +2,8 @@ import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { AnimatedCounter } from '../ui/AnimatedCounter'
 import { DragCarousel } from '../ui/DragCarousel'
-import { LightBackdrop } from '../ui/LightBackdrop'
+import { Section } from '../ui/Section'
+import { SectionHeading } from '../ui/SectionHeading'
 
 const STATS = [
   { target: 500, suffix: '+', label: 'часов видеоконтента создано' },
@@ -50,19 +51,9 @@ function FadeInSection({ children, delay = 0 }: { children: React.ReactNode; del
 
 export function About() {
   return (
-    <section id="about" style={{ background: 'var(--bp-light-bg)', padding: '72px 0', position: 'relative', isolation: 'isolate', overflow: 'hidden' }}>
-      <LightBackdrop position="center 30%" opacity={0.14} />
-      <div className="section-topline" aria-hidden="true" />
+    <Section id="about" tone="light" padding="72px 0" backdrop={{ position: 'center 30%' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
-
-        {/* Section heading */}
-        <FadeInSection>
-          <div style={{ textAlign: 'center', marginBottom: 40 }}>
-            <h2 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 'clamp(32px, 4.5vw, 52px)', color: 'var(--bp-dark-blue)', margin: 0, letterSpacing: '-0.02em' }}>
-              Best Practice AI
-            </h2>
-          </div>
-        </FadeInSection>
+        <SectionHeading title="Best Practice AI" marginBottom={40} />
 
         {/* Stats row */}
         <FadeInSection delay={0.1}>
@@ -206,6 +197,6 @@ export function About() {
           -webkit-text-stroke: 1px rgba(11,29,58,0.18);
         }
       `}</style>
-    </section>
+    </Section>
   )
 }

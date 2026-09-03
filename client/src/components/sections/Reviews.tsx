@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { api } from '../../api/client'
-import { SectionSpotlight } from '../ui/SectionSpotlight'
+import { Section } from '../ui/Section'
+import { SectionHeading } from '../ui/SectionHeading'
 import type { Review } from '../../types'
 
 const AUTOPLAY_MS = 7000
@@ -66,50 +67,9 @@ export function Reviews() {
   const review = reviews[current]
 
   return (
-    <section id="reviews" className="bp-grain" style={{ background: 'var(--bp-dark-blue)', padding: '80px 0', position: 'relative', overflow: 'hidden' }}>
-      {/* Ненавязчивый фон: серверные стойки из hero-видео под плотным синим оверлеем */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: 'url(/assets/decorative/reviews-bg.webp)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center 40%',
-          opacity: 0.32,
-          pointerEvents: 'none',
-        }}
-      />
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'linear-gradient(180deg, var(--bp-dark-blue) 0%, rgba(11,29,58,0.55) 30%, rgba(11,29,58,0.55) 70%, var(--bp-dark-blue) 100%)',
-          pointerEvents: 'none',
-        }}
-      />
-      <div className="section-topline" aria-hidden="true" />
-      <SectionSpotlight />
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          style={{ textAlign: 'center', marginBottom: 48 }}
-        >
-          <div style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 600, fontSize: 13, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--bp-gold)', marginBottom: 14 }}>
-            Отзывы
-          </div>
-          <h2 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 'clamp(32px, 4.5vw, 52px)', letterSpacing: '-0.02em', color: '#fff', marginBottom: 16 }}>
-            Что говорят клиенты
-          </h2>
-          <p style={{ fontFamily: 'var(--bp-font-body)', fontSize: 18, color: 'rgba(250,249,246,0.6)' }}>
-            Реальные результаты — реальные люди
-          </p>
-        </motion.div>
+    <Section id="reviews" tone="dark" backdrop={{ position: 'center 40%' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
+        <SectionHeading tone="dark" title="Отзывы" subtitle="Реальные результаты — реальные люди" />
 
         <div
           style={{ maxWidth: 800, margin: '0 auto', position: 'relative' }}
@@ -254,6 +214,6 @@ export function Reviews() {
           .review-card-inner { padding: 32px 24px !important; }
         }
       `}</style>
-    </section>
+    </Section>
   )
 }

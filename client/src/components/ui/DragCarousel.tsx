@@ -11,13 +11,15 @@ interface Props {
   theme?: 'dark' | 'light'
   /** Выравнивание блока стрелок */
   arrowsAlign?: 'center' | 'right'
+  /** Лента не обрезается по контейнеру, а уходит за его край до границы секции (секция должна иметь overflow: hidden) */
+  bleed?: boolean
 }
 
 /**
  * Горизонтальная draggable-карусель (weichie-стиль): инерционный drag,
  * стрелки, guard «drag ≠ click» для вложенных ссылок.
  */
-export function DragCarousel({ children, gap = 24, step, ariaLabel, theme = 'dark', arrowsAlign = 'center' }: Props) {
+export function DragCarousel({ children, gap = 24, step, ariaLabel, theme = 'dark', arrowsAlign = 'center', bleed = false }: Props) {
   const viewportRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const x = useMotionValue(0)
@@ -84,7 +86,7 @@ export function DragCarousel({ children, gap = 24, step, ariaLabel, theme = 'dar
 
   return (
     <div aria-label={ariaLabel} role="region">
-      <div ref={viewportRef} style={{ overflow: 'hidden' }}>
+      <div ref={viewportRef} style={{ overflow: bleed ? 'visible' : 'hidden' }}>
         <motion.div
           ref={trackRef}
           drag={maxDrag > 0 ? 'x' : false}
@@ -110,7 +112,7 @@ export function DragCarousel({ children, gap = 24, step, ariaLabel, theme = 'dar
       </div>
 
       {maxDrag > 0 && (
-        <div style={{ display: 'flex', justifyContent: arrowsAlign === 'right' ? 'flex-end' : 'center', gap: 16, marginTop: 32 }}>
+        <div className="drag-carousel__arrows" style={{ display: 'flex', justifyContent: arrowsAlign === 'right' ? 'flex-end' : 'center', gap: 16, marginTop: 32 }}>
           <button onClick={() => nudge(-1)} style={arrowStyle} onMouseEnter={hoverIn} onMouseLeave={hoverOut} aria-label="Назад">
             ←
           </button>
@@ -119,6 +121,12 @@ export function DragCarousel({ children, gap = 24, step, ariaLabel, theme = 'dar
           </button>
         </div>
       )}
+      <style>{`
+        /* На мобильных правый угол занят кнопкой «наверх» — стрелки по центру */
+        @media (max-width: 640px) {
+          .drag-carousel__arrows { justify-content: center !important; }
+        }
+      `}</style>
     </div>
   )
 }

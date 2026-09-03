@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { CoverflowCarousel } from '../ui/CoverflowCarousel'
-import { SectionSpotlight } from '../ui/SectionSpotlight'
+import { Section } from '../ui/Section'
+import { SectionHeading } from '../ui/SectionHeading'
 import { api } from '../../api/client'
 
 interface ServiceCardData {
@@ -71,50 +72,14 @@ export function Services() {
   }, [])
 
   return (
-    <section id="services" className="bp-grain" style={{ background: 'var(--bp-dark-blue)', padding: '80px 0 72px', position: 'relative', overflow: 'hidden', isolation: 'isolate' }}>
-      {/* Ненавязчивый фон: серверные стойки, как в «Отзывах» */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: -1,
-          backgroundImage: 'url(/assets/decorative/reviews-bg.webp)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center 60%',
-          opacity: 0.28,
-          pointerEvents: 'none',
-        }}
-      />
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: -1,
-          background: 'linear-gradient(180deg, var(--bp-dark-blue) 0%, rgba(11,29,58,0.5) 30%, rgba(11,29,58,0.5) 70%, var(--bp-dark-blue) 100%)',
-          pointerEvents: 'none',
-        }}
-      />
-      <div className="section-topline" aria-hidden="true" />
-      <SectionSpotlight />
+    <Section id="services" tone="dark" padding="80px 0 72px" backdrop={{ position: 'center 60%' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          style={{ textAlign: 'center', marginBottom: 48 }}
-        >
-          <h2 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 'clamp(32px, 4.5vw, 52px)', color: '#fff', marginBottom: 16 }}>
-            Наши услуги
-          </h2>
-          <p style={{ fontFamily: 'var(--bp-font-body)', fontSize: 18, color: 'rgba(250,249,246,0.7)', maxWidth: 600, margin: '0 auto' }}>
-            Выберите то, что подходит именно вам — или свяжитесь с нами, и мы подберём оптимальное решение
-          </p>
-        </motion.div>
-
+        <SectionHeading
+          tone="dark"
+          title="Наши услуги"
+          subtitle="Выберите то, что подходит именно вам — или свяжитесь с нами, и мы подберём оптимальное решение"
+          subtitleMaxWidth={600}
+        />
       </div>
 
       {/* Coverflow на всю ширину экрана — карточки уходят за края как на референсе */}
@@ -230,7 +195,7 @@ export function Services() {
         .service-photo-card__more .service-arrow { transition: transform 0.2s ease; }
         .service-photo-card.is-active:hover .service-arrow { transform: translateX(4px); }
       `}</style>
-    </section>
+    </Section>
   )
 }
 

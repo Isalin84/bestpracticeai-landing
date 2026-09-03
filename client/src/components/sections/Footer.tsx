@@ -38,7 +38,7 @@ export function Footer() {
               {[
                 { label: 'О нас', href: '/#about' },
                 { label: 'Услуги', href: '/#services' },
-                { label: 'Медиа', href: '/#media' },
+                { label: 'Блог', href: '/#media' },
                 { label: 'Отзывы', href: '/#reviews' },
                 { label: 'Контакты', href: '/#contacts' },
               ].map(item => (

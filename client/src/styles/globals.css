@@ -11,6 +11,9 @@
   --bp-light-steel: #2A4F7A;
   --bp-text-dark: #1a1a1a;
   --bp-text-light: #FAF9F6;
+  /* RGB-каналы фоновых цветов для rgba(var(--…), α) — чтобы полупрозрачные слои не расходились с токенами */
+  --bp-dark-blue-rgb: 11, 29, 58;
+  --bp-light-bg-rgb: 250, 249, 246;
   --bp-font-heading: 'Montserrat', sans-serif;
   --bp-font-body: 'Lora', serif;
   --bp-font-ui: 'Inter', 'Montserrat', sans-serif;

@@ -7,7 +7,7 @@ import { scrollToId } from '../../hooks/useLenis'
 const NAV_ITEMS = [
   { label: 'О нас', href: '/#about' },
   { label: 'Услуги', href: '/#services' },
-  { label: 'Медиа', href: '/#media' },
+  { label: 'Блог', href: '/#media' },
   { label: 'Отзывы', href: '/#reviews' },
   { label: 'Контакты', href: '/#contacts' },
 ]

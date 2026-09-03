@@ -189,7 +189,7 @@ seoRouter.get('/', (req, res) => {
 <section><h2 style="margin:32px 0 12px">Услуги</h2><ul style="line-height:1.9;padding-left:20px">
 ${servicesHtml}
 </ul></section>
-<section><h2 style="margin:32px 0 12px">Медиа — статьи о нейросетях</h2><ul style="line-height:1.9;padding-left:20px">
+<section><h2 style="margin:32px 0 12px">Блог — статьи о нейросетях</h2><ul style="line-height:1.9;padding-left:20px">
 ${articlesHtml}
 </ul></section>
 <section><h2 style="margin:32px 0 12px">Контакты</h2><p>Телефон: +7 (910) 170-11-26 · Email: salinivan@mail.ru · Telegram-канал: @bestpractice_ai · Личный Telegram: @isalin</p></section>
@@ -246,7 +246,7 @@ seoRouter.get('/blog/:slug', (req, res) => {
         },
         breadcrumbLd([
           { name: 'Главная', item: SITE_URL + '/' },
-          { name: 'Медиа', item: SITE_URL + '/#media' },
+          { name: 'Блог', item: SITE_URL + '/#media' },
           { name: article.title, item: canonical },
         ]),
       ],
@@ -255,7 +255,7 @@ seoRouter.get('/blog/:slug', (req, res) => {
     const rootHtml = `
 <div style="background:#FAF9F6;min-height:100vh;padding:96px 24px 64px">
 <main style="max-width:800px;margin:0 auto">
-<nav style="font-size:13px;color:#9ca3af;margin-bottom:24px"><a href="/" style="color:#9ca3af">Главная</a> → <a href="/#media" style="color:#9ca3af">Медиа</a></nav>
+<nav style="font-size:13px;color:#9ca3af;margin-bottom:24px"><a href="/" style="color:#9ca3af">Главная</a> → <a href="/#media" style="color:#9ca3af">Блог</a></nav>
 <article class="prose-bp">
 <p style="font-size:13px;color:#9ca3af">${dateHuman}</p>
 <h1 style="font-family:Montserrat,sans-serif;color:#0B1D3A;line-height:1.2">${escapeHtml(article.title)}</h1>
