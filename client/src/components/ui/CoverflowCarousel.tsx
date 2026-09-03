@@ -60,27 +60,40 @@ export function CoverflowCarousel<T>({ items, getKey, renderCard, getShadowImage
   }, [n, onActiveChange])
 
   // --- drag ---
+  // ВАЖНО: setPointerCapture нельзя вызывать на pointerdown — по спецификации Pointer Events
+  // click после захвата уходит в захвативший элемент (сцену), и ссылка в карточке его не получает.
+  // Поэтому захватываем указатель только когда движение превысило порог драга.
   const onPointerDown = (e: React.PointerEvent) => {
     if (e.button !== 0) return
     dragStart.current = e.clientX
     draggingRef.current = false
-    ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
   }
   const onPointerMove = (e: React.PointerEvent) => {
     if (dragStart.current === null) return
     const dx = e.clientX - dragStart.current
-    if (Math.abs(dx) > 6) draggingRef.current = true
-    setDragX(dx)
+    if (!draggingRef.current && Math.abs(dx) > 6) {
+      draggingRef.current = true
+      ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
+    }
+    if (draggingRef.current) setDragX(dx)
   }
   const endDrag = (e: React.PointerEvent) => {
     if (dragStart.current === null) return
     const dx = e.clientX - dragStart.current
     dragStart.current = null
+    if (!draggingRef.current) return // обычный клик — отдаём браузеру и Link
+    // после драга активная карточка сменится — фокус со ссылки (станет aria-hidden) снимаем
+    const active = document.activeElement
+    if (active instanceof HTMLElement && e.currentTarget.contains(active)) active.blur()
     setDragX(0)
     const steps = Math.round(-dx / (spacing * 0.6))
     if (steps !== 0) go(Math.sign(steps) * Math.min(Math.abs(steps), 2))
     // клик сразу после драга не должен срабатывать
     setTimeout(() => { draggingRef.current = false }, 50)
+  }
+  // Указатель ушёл со сцены до порога драга (захвата ещё нет) — сбрасываем незавершённое нажатие
+  const onPointerLeave = () => {
+    if (dragStart.current !== null && !draggingRef.current) dragStart.current = null
   }
 
   // --- горизонтальное колесо / трекпад ---
@@ -141,6 +154,7 @@ export function CoverflowCarousel<T>({ items, getKey, renderCard, getShadowImage
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
+        onPointerLeave={onPointerLeave}
       >
         {Array.from({ length: sideRange * 2 + 1 }, (_, k) => k - sideRange).map(offset => {
           const item = items[mod(index + offset, n)]
