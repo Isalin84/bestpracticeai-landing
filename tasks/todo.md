@@ -24,7 +24,9 @@
 - [x] Hero3 (10.3 с): scrub 6.1 МБ / loop 1.2 МБ / постер, ACTIVE_HERO = hero3
 - [x] About: убраны кикеры «О нас»/«Почему мы», подзаголовок, заголовок «Почему Best Practice?» и абзац; отступы плотнее
 - [x] LightBackdrop (keyboard.png → webp 31 КБ) под About / Media / Contacts с разным фокусом
-- [ ] Коммит волны 3
+- [x] Коммит волны 3 (01f2456)
+- [x] Мерж в main + push (50ec449..01f2456)
+- [x] Деплой на прод 2026-09-03: бэкап БД, git pull, dist swap, pm2 restart, все проверки 200
 
 ## Ревью
 - Найдено и исправлено в процессе: конфликт `animate.opacity` + `style.opacity` (MotionValue) на одном элементе → контент невидим; числовые dragConstraints `{0,0}` на старте → трек прыгал на край.
