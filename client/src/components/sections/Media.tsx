@@ -2,28 +2,31 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { api } from '../../api/client'
-import { DragCarousel } from '../ui/DragCarousel'
+import { CoverflowCarousel } from '../ui/CoverflowCarousel'
 import { Section } from '../ui/Section'
 import { SectionHeading } from '../ui/SectionHeading'
 import type { Article } from '../../types'
 
 const PAGE_SIZE = 6
-const MotionLink = motion.create(Link)
 
-function ArticleCard({ article }: { article: Article }) {
+/** Элемент карусели: статья, скелет на время загрузки или карточка «Ещё статьи» */
+type BlogItem =
+  | { kind: 'article'; key: string; article: Article }
+  | { kind: 'skeleton'; key: string }
+  | { kind: 'more'; key: string }
+
+function ArticleCard({ article, isActive }: { article: Article; isActive: boolean }) {
   const date = new Date(article.created_at).toLocaleDateString('ru-RU', {
     day: 'numeric', month: 'long', year: 'numeric',
   })
 
   return (
-    <MotionLink
+    <Link
       to={`/blog/${article.slug}`}
-      className="blog-card"
+      className={`blog-card ${isActive ? 'is-active' : ''}`}
       draggable={false}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
+      tabIndex={isActive ? 0 : -1}
+      aria-hidden={!isActive}
     >
       <div className="blog-card__media">
         {article.cover_url ? (
@@ -41,7 +44,7 @@ function ArticleCard({ article }: { article: Article }) {
           <span className="blog-card__arrow">→</span>
         </span>
       </div>
-    </MotionLink>
+    </Link>
   )
 }
 
@@ -66,66 +69,93 @@ export function Media() {
     setLoading(false)
   }
 
+  const items: BlogItem[] = [
+    ...articles.map((article): BlogItem => ({ kind: 'article', key: article.slug, article })),
+    ...(loading ? [1, 2, 3].map((i): BlogItem => ({ kind: 'skeleton', key: `skeleton-${i}` })) : []),
+    ...(hasMore && !loading ? [{ kind: 'more', key: 'more' } as BlogItem] : []),
+  ]
+
   return (
     <Section id="media" tone="light" backdrop={{ position: 'center 70%', strength: 0.08 }}>
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
         <SectionHeading title="Блог" subtitle="Статьи, кейсы и инсайты о применении ИИ в бизнесе" />
-
-        {articles.length === 0 && !loading && (
-          <div style={{ textAlign: 'center', padding: '40px 0', fontFamily: 'var(--bp-font-body)', color: '#9ca3af' }}>
-            Статьи скоро появятся
-          </div>
-        )}
-
-        {/* Лента статей уходит за правый край контейнера — как карусель услуг */}
-        <DragCarousel ariaLabel="Статьи блога" theme="light" gap={24} arrowsAlign="right" bleed>
-          {articles.map(article => (
-            <ArticleCard key={article.id} article={article} />
-          ))}
-          {loading && [1, 2, 3].map(i => (
-            <div key={`skeleton-${i}`} className="blog-card blog-card--skeleton" aria-hidden="true">
-              <div className="blog-card__media" style={{ background: '#eef0f3' }} />
-              <div className="blog-card__body">
-                <div style={{ height: 18, background: '#eef0f3', borderRadius: 6, marginBottom: 10 }} />
-                <div style={{ height: 18, background: '#eef0f3', borderRadius: 6, width: '70%', marginBottom: 18 }} />
-                <div style={{ height: 14, background: '#f3f4f6', borderRadius: 6, marginBottom: 8 }} />
-                <div style={{ height: 14, background: '#f3f4f6', borderRadius: 6, width: '85%' }} />
-              </div>
-            </div>
-          ))}
-          {hasMore && !loading && (
-            <button type="button" className="blog-card blog-card--more" onClick={() => loadArticles(page + 1)}>
-              <span className="blog-card--more__ring" aria-hidden="true">→</span>
-              <span>Ещё статьи</span>
-            </button>
-          )}
-        </DragCarousel>
       </div>
+
+      {items.length === 0 ? (
+        <div style={{ textAlign: 'center', padding: '40px 0', fontFamily: 'var(--bp-font-body)', color: '#9ca3af' }}>
+          Статьи скоро появятся
+        </div>
+      ) : (
+        /* Coverflow на всю ширину — тот же паттерн, что в «Услугах» */
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          style={{ padding: '0 16px' }}
+        >
+          <CoverflowCarousel
+            items={items}
+            getKey={item => item.key}
+            ariaLabel="Статьи блога"
+            theme="light"
+            getShadowImage={item => (item.kind === 'article' ? item.article.cover_url ?? undefined : undefined)}
+            renderCard={(item, isActive) => {
+              if (item.kind === 'article') return <ArticleCard article={item.article} isActive={isActive} />
+              if (item.kind === 'more') {
+                return (
+                  <button
+                    type="button"
+                    className="blog-card blog-card--more"
+                    onClick={() => loadArticles(page + 1)}
+                    tabIndex={isActive ? 0 : -1}
+                    aria-hidden={!isActive}
+                  >
+                    <span className="blog-card--more__ring" aria-hidden="true">→</span>
+                    <span>Ещё статьи</span>
+                  </button>
+                )
+              }
+              return (
+                <div className="blog-card blog-card--skeleton" aria-hidden="true">
+                  <div className="blog-card__media" />
+                  <div className="blog-card__body">
+                    <div style={{ height: 18, background: '#eef0f3', borderRadius: 6, marginBottom: 10 }} />
+                    <div style={{ height: 18, background: '#eef0f3', borderRadius: 6, width: '70%', marginBottom: 18 }} />
+                    <div style={{ height: 14, background: '#f3f4f6', borderRadius: 6, marginBottom: 8 }} />
+                    <div style={{ height: 14, background: '#f3f4f6', borderRadius: 6, width: '85%' }} />
+                  </div>
+                </div>
+              )
+            }}
+          />
+        </motion.div>
+      )}
 
       <style>{`
         .blog-card {
           position: relative;
-          width: clamp(300px, 30vw, 400px);
+          width: 100%;
+          height: 100%;
           display: flex;
           flex-direction: column;
           background: #fff;
-          border-radius: 20px;
+          border-radius: 24px;
           overflow: hidden;
-          border: 1px solid rgba(11,29,58,0.06);
+          border: 1px solid rgba(var(--bp-dark-blue-rgb), 0.06);
           box-shadow: var(--bp-shadow-card);
           text-decoration: none;
           user-select: none;
           -webkit-user-drag: none;
-          transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+          transition: box-shadow 0.3s ease, border-color 0.3s ease;
         }
-        .blog-card:hover {
-          transform: translateY(-6px);
+        .blog-card.is-active:hover {
           border-color: rgba(212,175,55,0.45);
           box-shadow: var(--bp-shadow-card-hover), 0 0 40px rgba(212,175,55,0.12);
         }
         .blog-card__media {
           position: relative;
-          aspect-ratio: 16 / 10;
+          height: 56%;
           overflow: hidden;
           background: #eef0f3;
           flex-shrink: 0;
@@ -140,7 +170,7 @@ export function Media() {
           transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
           pointer-events: none;
         }
-        .blog-card:hover .blog-card__img { transform: scale(1.05); }
+        .blog-card.is-active:hover .blog-card__img { transform: scale(1.05); }
         .blog-card__img--empty {
           display: flex; align-items: center; justify-content: center;
           background: linear-gradient(135deg, var(--bp-steel-blue), var(--bp-dark-blue));
@@ -167,15 +197,20 @@ export function Media() {
           display: flex;
           flex-direction: column;
           flex: 1;
+          min-height: 0;
           padding: 22px 24px 24px;
         }
         .blog-card__title {
           font-family: var(--bp-font-heading);
           font-weight: 600;
-          font-size: 18px;
+          font-size: clamp(16px, 1.4vw, 19px);
           line-height: 1.35;
           color: var(--bp-dark-blue);
           margin: 0 0 12px;
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
         }
         .blog-card__excerpt {
           font-family: var(--bp-font-body);
@@ -199,7 +234,7 @@ export function Media() {
           color: var(--bp-gold);
         }
         .blog-card__arrow { transition: transform 0.2s ease; }
-        .blog-card:hover .blog-card__arrow { transform: translateX(4px); }
+        .blog-card.is-active:hover .blog-card__arrow { transform: translateX(4px); }
 
         .blog-card--skeleton { animation: blog-pulse 1.5s ease-in-out infinite alternate; pointer-events: none; }
         @keyframes blog-pulse { from { opacity: 1; } to { opacity: 0.55; } }
@@ -208,7 +243,7 @@ export function Media() {
           align-items: center;
           justify-content: center;
           gap: 18px;
-          background: transparent;
+          background: rgba(255,255,255,0.6);
           border: 1px dashed rgba(212,175,55,0.5);
           box-shadow: none;
           cursor: pointer;
@@ -226,6 +261,14 @@ export function Media() {
           transition: all 0.2s;
         }
         .blog-card--more:hover .blog-card--more__ring { background: var(--bp-gold); border-color: var(--bp-gold); color: var(--bp-dark-blue); }
+        /* Узкие карточки (250px): только дата, заголовок и ссылка */
+        @media (max-width: 640px) {
+          .blog-card__media { height: 52%; }
+          .blog-card__body { padding: 14px 16px 16px; }
+          .blog-card__title { font-size: 15px; margin-bottom: 8px; }
+          .blog-card__excerpt { display: none; }
+          .blog-card__more { padding-top: 10px; font-size: 12px; }
+        }
       `}</style>
     </Section>
   )

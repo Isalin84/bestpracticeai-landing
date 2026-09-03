@@ -14,22 +14,22 @@ const STATS = [
 
 const WHY_CARDS = [
   {
-    icon: '/assets/icons/neiroset.png',
+    icon: '/assets/icons/neiroset.webp',
     title: 'Реальный опыт',
     text: 'Проведение тренингов по ИИ, создание корпоративных видео и разработка с помощью ИИ для крупных международных компаний.',
   },
   {
-    icon: '/assets/icons/Pioneers.png',
+    icon: '/assets/icons/Pioneers.webp',
     title: 'Пионеры генеративного AI',
     text: 'Первыми в России использовали ИИ-ассистентов для обучения коммуникативным навыкам. Дважды лауреаты федеральных премий.',
   },
   {
-    icon: '/assets/icons/roi.png',
+    icon: '/assets/icons/roi.webp',
     title: 'Измеримые результаты',
     text: 'Экономия до 70% на производстве контента. Увеличение эффективности за счет созданных приложений с помощью ИИ сотрудниками после обучения.',
   },
   {
-    icon: '/assets/icons/training.png',
+    icon: '/assets/icons/training.webp',
     title: 'Доступно каждому',
     text: 'Обучаем от основ до продвинутого уровня. Корпоративные группы и индивидуальные форматы.',
   },

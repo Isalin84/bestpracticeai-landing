@@ -214,22 +214,6 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.12);
 }
 
-/* Service card hover */
-.service-card {
-  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-  border: 2px solid transparent;
-}
-.service-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--bp-gold);
-  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.15);
-}
-
-/* Review carousel */
-.reviews-carousel {
-  overflow: hidden;
-}
-
 /* Admin sidebar */
 .admin-nav-item {
   display: flex;

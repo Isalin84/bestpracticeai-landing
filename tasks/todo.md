@@ -40,6 +40,14 @@
 - [x] lessons.md: правила «без кикеров», «короткие названия секций», «декор только через Section»
 - [x] Коммит de67618 + push main; деплой 2026-09-03: бэкап БД, dist swap, git pull (898c3c5), pm2 restart, проверка https://bestpracticeai.ru
 
+## Волна 5 (coverflow блога, спека, техдолг)
+- [x] Блог: `CoverflowCarousel` (как «Услуги»/weichie) вместо DragCarousel; `theme="light"`, точки-индикаторы, карточка «Ещё статьи» внутри coverflow; мобильная карточка без превью
+- [x] CoverflowCarousel: фикс дублей ключей при n < 5 (sideRange), меньше запас под тень на мобильных
+- [x] DragCarousel: убран неиспользуемый `bleed`
+- [x] CLAUDE.md переписан под текущий дизайн (v2.0): секции, компоненты, CMS услуг, API, ассеты, решения владельца
+- [x] Техдолг: иконки About 850 КБ PNG → 128px webp (~10 КБ), удалены tablet-mockup / тёмный логотип / section-divider / Button.tsx / легаси `.service-card`, `.reviews-carousel`
+- [x] Ревью диффа субагентом (фокус на aria-hidden карточке → preventDefault на mousedown, :focus-visible у карусели), tsc + build
+
 ## Ревью
 - Найдено и исправлено в процессе: конфликт `animate.opacity` + `style.opacity` (MotionValue) на одном элементе → контент невидим; числовые dragConstraints `{0,0}` на старте → трек прыгал на край.
 - Ревью ab60716 (8 агентов): контент-обёртка Services не была позиционирована → зерно и spotlight рисовались поверх заголовка; третья рукописная копия фона с «уехавшими» числами; `rgba(11,29,58,…)` вместо токена; H2 без letter-spacing; кикер снят только в одной секции. Всё закрыто волной 4 общими компонентами.

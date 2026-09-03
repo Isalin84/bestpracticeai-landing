@@ -8,9 +8,11 @@ interface Props<T> {
   getShadowImage?: (item: T) => string | undefined
   initialIndex?: number
   ariaLabel?: string
-  /** Подписи-теги под каруселью */
+  /** Подписи-теги под каруселью; без них рисуются точки-индикаторы */
   renderTag?: (item: T, isActive: boolean) => React.ReactNode
   onActiveChange?: (index: number) => void
+  /** Цвета стрелок/тегов под тёмный или светлый фон секции */
+  theme?: 'dark' | 'light'
 }
 
 const VISIBLE_RANGE = 2
@@ -24,7 +26,7 @@ function mod(n: number, m: number) {
  * соседние развёрнуты по Y и уходят вглубь; бесконечная прокрутка по кругу.
  * Управление: drag, горизонтальное колесо, стрелки, клавиатура, клик по соседней.
  */
-export function CoverflowCarousel<T>({ items, getKey, renderCard, getShadowImage, initialIndex = 0, ariaLabel, renderTag, onActiveChange }: Props<T>) {
+export function CoverflowCarousel<T>({ items, getKey, renderCard, getShadowImage, initialIndex = 0, ariaLabel, renderTag, onActiveChange, theme = 'dark' }: Props<T>) {
   const n = items.length
   const [index, setIndex] = useState(initialIndex)
   const [dragX, setDragX] = useState(0)
@@ -118,15 +120,17 @@ export function CoverflowCarousel<T>({ items, getKey, renderCard, getShadowImage
 
   const cardH = cardW * 1.25
   const dragOffset = dragX / spacing
+  // Сколько соседей показывать с каждой стороны, чтобы при малом n элемент не появился дважды по кругу
+  const sideRange = Math.min(isNarrow ? 1 : VISIBLE_RANGE, Math.floor((n - 1) / 2))
 
   return (
-    <div aria-label={ariaLabel} role="region" tabIndex={0} onKeyDown={onKeyDown} style={{ outline: 'none' }}>
+    <div aria-label={ariaLabel} role="region" tabIndex={0} onKeyDown={onKeyDown} className={`coverflow coverflow--${theme}`} style={{ outline: 'none' }}>
       <div
         ref={stageRef}
         className="coverflow-stage"
         style={{
           position: 'relative',
-          height: cardH + 96,
+          height: cardH + (isNarrow ? 40 : 96), // запас под цветную тень карточки
           perspective: 1800,
           perspectiveOrigin: '50% 45%',
           cursor: dragStart.current !== null ? 'grabbing' : 'grab',
@@ -138,8 +142,7 @@ export function CoverflowCarousel<T>({ items, getKey, renderCard, getShadowImage
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
       >
-        {Array.from({ length: VISIBLE_RANGE * 2 + 1 }, (_, k) => k - VISIBLE_RANGE).map(offset => {
-          if (isNarrow && Math.abs(offset) > 1) return null
+        {Array.from({ length: sideRange * 2 + 1 }, (_, k) => k - sideRange).map(offset => {
           const item = items[mod(index + offset, n)]
           if (!item) return null
           const o = offset + dragOffset // живой сдвиг во время драга
@@ -157,6 +160,8 @@ export function CoverflowCarousel<T>({ items, getKey, renderCard, getShadowImage
               key={getKey(item)}
               className="coverflow-card"
               onClickCapture={onCardClickCapture(offset)}
+              // Соседняя карточка aria-hidden: не даём браузеру перевести на неё фокус при mousedown
+              onMouseDown={offset !== 0 ? e => e.preventDefault() : undefined}
               style={{
                 position: 'absolute',
                 left: '50%',
@@ -204,10 +209,10 @@ export function CoverflowCarousel<T>({ items, getKey, renderCard, getShadowImage
         })}
       </div>
 
-      {(renderTag || n > 1) && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto', alignItems: 'center', gap: 16, marginTop: 24, maxWidth: 1280, margin: '24px auto 0', padding: '0 8px' }}>
+      {n > 1 && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto', alignItems: 'center', gap: 16, maxWidth: 1280, margin: '24px auto 0', padding: '0 8px' }}>
           <button onClick={() => go(-1)} className="coverflow-arrow" aria-label="Назад">←</button>
-          {renderTag && (
+          {renderTag ? (
             <div className="coverflow-tags">
               {items.map((item, i) => (
                 <button
@@ -219,12 +224,24 @@ export function CoverflowCarousel<T>({ items, getKey, renderCard, getShadowImage
                 </button>
               ))}
             </div>
+          ) : (
+            <div className="coverflow-dots">
+              {items.map((item, i) => (
+                <button
+                  key={getKey(item)}
+                  onClick={() => { onActiveChange?.(i); setIndex(i) }}
+                  className={`coverflow-dot ${i === index ? 'is-active' : ''}`}
+                  aria-label={`Слайд ${i + 1}`}
+                />
+              ))}
+            </div>
           )}
           <button onClick={() => go(1)} className="coverflow-arrow" aria-label="Вперёд">→</button>
         </div>
       )}
 
       <style>{`
+        .coverflow:focus-visible { outline: 2px solid var(--bp-gold); outline-offset: 6px; border-radius: 24px; }
         .coverflow-arrow {
           width: 44px; height: 44px; border-radius: 50%;
           border: 2px solid rgba(212,175,55,0.4); background: transparent;
@@ -243,6 +260,20 @@ export function CoverflowCarousel<T>({ items, getKey, renderCard, getShadowImage
         }
         .coverflow-tag:hover { border-color: rgba(212,175,55,0.6); color: #fff; }
         .coverflow-tag.is-active { background: var(--bp-gold); border-color: var(--bp-gold); color: var(--bp-dark-blue); }
+        .coverflow-dots { display: flex; gap: 8px; justify-content: center; align-items: center; }
+        .coverflow-dot {
+          width: 8px; height: 8px; border-radius: 4px; border: none; padding: 0; cursor: pointer;
+          background: rgba(255,255,255,0.2); transition: width 0.3s, background 0.3s;
+        }
+        .coverflow-dot.is-active { width: 32px; background: var(--bp-gold); }
+
+        /* Светлая секция: тёмно-синие стрелки, теги и точки */
+        .coverflow--light .coverflow-arrow { border-color: rgba(var(--bp-dark-blue-rgb), 0.25); color: var(--bp-dark-blue); }
+        .coverflow--light .coverflow-arrow:hover { background: var(--bp-gold); border-color: var(--bp-gold); color: var(--bp-dark-blue); }
+        .coverflow--light .coverflow-tag { border-color: rgba(var(--bp-dark-blue-rgb), 0.15); background: rgba(255,255,255,0.6); color: #4b5563; }
+        .coverflow--light .coverflow-tag:hover { border-color: rgba(212,175,55,0.7); color: var(--bp-dark-blue); }
+        .coverflow--light .coverflow-dot { background: rgba(var(--bp-dark-blue-rgb), 0.18); }
+        .coverflow--light .coverflow-dot.is-active { background: var(--bp-gold); }
         @media (max-width: 640px) {
           .coverflow-tags { display: none; }
         }

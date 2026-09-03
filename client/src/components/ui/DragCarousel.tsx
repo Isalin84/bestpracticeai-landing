@@ -11,15 +11,13 @@ interface Props {
   theme?: 'dark' | 'light'
   /** Выравнивание блока стрелок */
   arrowsAlign?: 'center' | 'right'
-  /** Лента не обрезается по контейнеру, а уходит за его край до границы секции (секция должна иметь overflow: hidden) */
-  bleed?: boolean
 }
 
 /**
  * Горизонтальная draggable-карусель (weichie-стиль): инерционный drag,
  * стрелки, guard «drag ≠ click» для вложенных ссылок.
  */
-export function DragCarousel({ children, gap = 24, step, ariaLabel, theme = 'dark', arrowsAlign = 'center', bleed = false }: Props) {
+export function DragCarousel({ children, gap = 24, step, ariaLabel, theme = 'dark', arrowsAlign = 'center' }: Props) {
   const viewportRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const x = useMotionValue(0)
@@ -86,7 +84,7 @@ export function DragCarousel({ children, gap = 24, step, ariaLabel, theme = 'dar
 
   return (
     <div aria-label={ariaLabel} role="region">
-      <div ref={viewportRef} style={{ overflow: bleed ? 'visible' : 'hidden' }}>
+      <div ref={viewportRef} style={{ overflow: 'hidden' }}>
         <motion.div
           ref={trackRef}
           drag={maxDrag > 0 ? 'x' : false}

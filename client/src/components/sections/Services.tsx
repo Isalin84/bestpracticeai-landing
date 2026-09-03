@@ -229,7 +229,7 @@ function ServiceCard({ service, isActive }: { service: ServiceCardData; isActive
         }}>
           {service.title}
         </h3>
-        <div className="service-photo-card__meta">
+        <div>
           <p style={{
             fontFamily: 'var(--bp-font-body)',
             fontSize: 14,
