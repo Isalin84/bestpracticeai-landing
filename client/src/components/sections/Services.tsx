@@ -71,7 +71,31 @@ export function Services() {
   }, [])
 
   return (
-    <section id="services" className="bp-grain" style={{ background: 'var(--bp-dark-blue)', padding: '80px 0 72px', position: 'relative', overflow: 'hidden' }}>
+    <section id="services" className="bp-grain" style={{ background: 'var(--bp-dark-blue)', padding: '80px 0 72px', position: 'relative', overflow: 'hidden', isolation: 'isolate' }}>
+      {/* Ненавязчивый фон: серверные стойки, как в «Отзывах» */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: -1,
+          backgroundImage: 'url(/assets/decorative/reviews-bg.webp)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center 60%',
+          opacity: 0.28,
+          pointerEvents: 'none',
+        }}
+      />
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: -1,
+          background: 'linear-gradient(180deg, var(--bp-dark-blue) 0%, rgba(11,29,58,0.5) 30%, rgba(11,29,58,0.5) 70%, var(--bp-dark-blue) 100%)',
+          pointerEvents: 'none',
+        }}
+      />
       <div className="section-topline" aria-hidden="true" />
       <SectionSpotlight />
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
@@ -83,17 +107,6 @@ export function Services() {
           transition={{ duration: 0.6 }}
           style={{ textAlign: 'center', marginBottom: 48 }}
         >
-          <div style={{
-            fontFamily: 'var(--bp-font-heading)',
-            fontWeight: 600,
-            fontSize: 13,
-            letterSpacing: '0.22em',
-            textTransform: 'uppercase',
-            color: 'var(--bp-gold)',
-            marginBottom: 14,
-          }}>
-            Best Practice AI
-          </div>
           <h2 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 'clamp(32px, 4.5vw, 52px)', color: '#fff', marginBottom: 16 }}>
             Наши услуги
           </h2>
