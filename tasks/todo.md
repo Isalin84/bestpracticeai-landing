@@ -47,6 +47,7 @@
 - [x] CLAUDE.md переписан под текущий дизайн (v2.0): секции, компоненты, CMS услуг, API, ассеты, решения владельца
 - [x] Техдолг: иконки About 850 КБ PNG → 128px webp (~10 КБ), удалены tablet-mockup / тёмный логотип / section-divider / Button.tsx / легаси `.service-card`, `.reviews-carousel`
 - [x] Ревью диффа субагентом (фокус на aria-hidden карточке → preventDefault на mousedown, :focus-visible у карусели), tsc + build
+- [x] Коммит e494aef + push; деплой 2026-09-03: бэкап БД, dist swap, git pull (d55b6d9), сервер без рестарта (код не менялся); прод 200, бандл с coverflow--light
 
 ## Ревью
 - Найдено и исправлено в процессе: конфликт `animate.opacity` + `style.opacity` (MotionValue) на одном элементе → контент невидим; числовые dragConstraints `{0,0}` на старте → трек прыгал на край.
