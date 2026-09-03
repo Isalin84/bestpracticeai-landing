@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { LightBackdrop } from '../ui/LightBackdrop'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { api } from '../../api/client'
@@ -83,7 +84,8 @@ export function Media() {
   }
 
   return (
-    <section id="media" style={{ background: 'var(--bp-light-bg)', padding: '80px 0', position: 'relative' }}>
+    <section id="media" style={{ background: 'var(--bp-light-bg)', padding: '80px 0', position: 'relative', isolation: 'isolate', overflow: 'hidden' }}>
+      <LightBackdrop position="center 70%" opacity={0.12} />
       <div className="section-topline" aria-hidden="true" />
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
 

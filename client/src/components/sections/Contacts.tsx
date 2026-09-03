@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { LightBackdrop } from '../ui/LightBackdrop'
 import { useForm } from 'react-hook-form'
 import { motion } from 'framer-motion'
 import { toast } from 'react-hot-toast'
@@ -62,7 +63,8 @@ export function Contacts() {
   }
 
   return (
-    <section id="contacts" style={{ background: 'var(--bp-light-bg)', padding: '80px 0', position: 'relative' }}>
+    <section id="contacts" style={{ background: 'var(--bp-light-bg)', padding: '80px 0', position: 'relative', isolation: 'isolate', overflow: 'hidden' }}>
+      <LightBackdrop position="center 20%" opacity={0.14} />
       <div className="section-topline" aria-hidden="true" />
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
 

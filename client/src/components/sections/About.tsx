@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { AnimatedCounter } from '../ui/AnimatedCounter'
 import { DragCarousel } from '../ui/DragCarousel'
+import { LightBackdrop } from '../ui/LightBackdrop'
 
 const STATS = [
   { target: 500, suffix: '+', label: 'часов видеоконтента создано' },
@@ -49,22 +50,17 @@ function FadeInSection({ children, delay = 0 }: { children: React.ReactNode; del
 
 export function About() {
   return (
-    <section id="about" style={{ background: 'var(--bp-light-bg)', padding: '80px 0', position: 'relative' }}>
+    <section id="about" style={{ background: 'var(--bp-light-bg)', padding: '72px 0', position: 'relative', isolation: 'isolate', overflow: 'hidden' }}>
+      <LightBackdrop position="center 30%" opacity={0.14} />
       <div className="section-topline" aria-hidden="true" />
       <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
 
         {/* Section heading */}
         <FadeInSection>
-          <div style={{ textAlign: 'center', marginBottom: 48 }}>
-            <div style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 600, fontSize: 13, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--bp-gold)', marginBottom: 14 }}>
-              О нас
-            </div>
-            <h2 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 'clamp(32px, 4.5vw, 52px)', color: 'var(--bp-dark-blue)', marginBottom: 16, letterSpacing: '-0.02em' }}>
+          <div style={{ textAlign: 'center', marginBottom: 40 }}>
+            <h2 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 'clamp(32px, 4.5vw, 52px)', color: 'var(--bp-dark-blue)', margin: 0, letterSpacing: '-0.02em' }}>
               Best Practice AI
             </h2>
-            <p style={{ fontFamily: 'var(--bp-font-body)', fontSize: 18, color: '#6b7280', maxWidth: 560, margin: '0 auto' }}>
-              Эксперты в применении генеративного ИИ для бизнеса
-            </p>
           </div>
         </FadeInSection>
 
@@ -77,7 +73,7 @@ export function About() {
               background: 'var(--bp-dark-blue)',
               borderRadius: 20,
               overflow: 'hidden',
-              marginBottom: 64,
+              marginBottom: 40,
               boxShadow: '0 24px 64px rgba(11,29,58,0.35)',
             }}
             className="stats-grid"
@@ -140,19 +136,6 @@ export function About() {
 
         {/* Why BP cards — карусель */}
         <FadeInSection delay={0.2}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 24, marginBottom: 32, flexWrap: 'wrap' }}>
-            <div>
-              <div style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 600, fontSize: 13, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--bp-gold)', marginBottom: 12 }}>
-                Почему мы
-              </div>
-              <h3 style={{ fontFamily: 'var(--bp-font-heading)', fontWeight: 700, fontSize: 'clamp(26px, 3.2vw, 36px)', color: 'var(--bp-dark-blue)', margin: 0, letterSpacing: '-0.01em' }}>
-                Почему Best Practice?
-              </h3>
-            </div>
-            <p style={{ fontFamily: 'var(--bp-font-body)', fontSize: 16, color: '#6b7280', maxWidth: 420, margin: 0, lineHeight: 1.6 }}>
-              Практика вместо теории: опыт крупных компаний, федеральные премии и измеримый эффект.
-            </p>
-          </div>
           <DragCarousel ariaLabel="Почему Best Practice" theme="light" gap={24} arrowsAlign="right">
             {WHY_CARDS.map((card, i) => (
               <div key={i} className="why-card">

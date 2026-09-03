@@ -1,5 +1,5 @@
-// Фоновое видео Hero. Переключение Hero1 <-> Hero2 — поменять ACTIVE_HERO.
-export const ACTIVE_HERO: 'hero1' | 'hero2' = 'hero2'
+// Фоновое видео Hero. Переключение версий — поменять ACTIVE_HERO.
+export const ACTIVE_HERO: 'hero1' | 'hero2' | 'hero3' = 'hero3'
 
 export const HERO_SOURCES = {
   hero1: {
@@ -13,6 +13,12 @@ export const HERO_SOURCES = {
     loop: '/assets/hero/hero2-loop.mp4',
     poster: '/assets/hero/hero2-poster.webp',
     duration: 12,
+  },
+  hero3: {
+    scrub: '/assets/hero/hero3-scrub.mp4',
+    loop: '/assets/hero/hero3-loop.mp4',
+    poster: '/assets/hero/hero3-poster.webp',
+    duration: 10.33,
   },
 } as const
 
