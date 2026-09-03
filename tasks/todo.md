@@ -38,7 +38,7 @@
 - [x] Блог: карусель статей (DragCarousel light + bleed за край контейнера, карточка «Ещё статьи» подгружает следующую страницу); стрелки по центру на мобильных
 - [x] tsc + build, визуальная проверка через Playwright (1440 и 390), консоль без ошибок
 - [x] lessons.md: правила «без кикеров», «короткие названия секций», «декор только через Section»
-- [ ] Коммит + push main, деплой dist на VPS (swap) + git pull/pm2 restart (seo.ts), проверка https://bestpracticeai.ru
+- [x] Коммит de67618 + push main; деплой 2026-09-03: бэкап БД, dist swap, git pull (898c3c5), pm2 restart, проверка https://bestpracticeai.ru
 
 ## Ревью
 - Найдено и исправлено в процессе: конфликт `animate.opacity` + `style.opacity` (MotionValue) на одном элементе → контент невидим; числовые dragConstraints `{0,0}` на старте → трек прыгал на край.
