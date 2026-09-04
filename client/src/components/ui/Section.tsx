@@ -1,4 +1,4 @@
-import { SectionBackdrop } from './SectionBackdrop'
+import { SectionBackdrop, type SectionBackdropProps } from './SectionBackdrop'
 import { SectionSpotlight } from './SectionSpotlight'
 
 interface Props {
@@ -6,7 +6,7 @@ interface Props {
   tone: 'light' | 'dark'
   padding?: string
   /** Фото-подложка; `false` — без неё */
-  backdrop?: { image?: string; position?: string; strength?: number } | false
+  backdrop?: Omit<SectionBackdropProps, 'tone'> | false
   children: React.ReactNode
 }
 

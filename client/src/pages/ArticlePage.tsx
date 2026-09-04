@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { api } from '../api/client'
+import { Section } from '../components/ui/Section'
 import type { Article } from '../types'
 
 export function ArticlePage() {
@@ -67,7 +68,8 @@ export function ArticlePage() {
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
-      <div style={{ paddingTop: 96, minHeight: '100vh', background: 'var(--bp-light-bg)' }}>
+      <Section id="article" tone="light" padding="96px 0 0" backdrop={{ position: 'center 65%', strength: 0.09, height: 'min(100%, 1100px)' }}>
+        <div style={{ minHeight: 'calc(100vh - 96px)' }}>
         {/* Breadcrumbs */}
         <div style={{ maxWidth: 800, margin: '0 auto', padding: '24px 24px 0', display: 'flex', gap: 8, alignItems: 'center', fontFamily: 'var(--bp-font-body)', fontSize: 13, color: '#9ca3af' }}>
           <Link to="/" style={{ color: '#9ca3af', textDecoration: 'none' }}>Главная</Link>
@@ -98,7 +100,8 @@ export function ArticlePage() {
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{article.content}</ReactMarkdown>
           </div>
         </article>
-      </div>
+        </div>
+      </Section>
     </>
   )
 }

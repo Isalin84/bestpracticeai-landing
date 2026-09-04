@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { motion } from 'framer-motion'
+import { Section } from '../../components/ui/Section'
 import type { ServiceFaq } from '../../types'
 
 export type FaqItem = ServiceFaq
@@ -84,10 +85,9 @@ export function ServiceLayout({ slug, name, seoTitle, seoDescription, heroSubtit
         <span style={{ color: 'var(--bp-dark-blue)' }}>{name}</span>
       </div>
 
-      {/* Hero */}
-      <section className="bp-grain" style={{ position: 'relative', background: 'linear-gradient(135deg, var(--bp-dark-blue), var(--bp-steel-blue))', padding: '72px 24px' }}>
-        <div className="section-topline" aria-hidden="true" />
-        <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center', position: 'relative' }}>
+      {/* Hero: серверная подложка чуть заметнее, чем на главной — H1 белый на тёмно-синем, контраст в запасе */}
+      <Section id="service-hero" tone="dark" padding="72px 24px" backdrop={{ position: 'center 45%', strength: 0.32 }}>
+        <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -104,16 +104,16 @@ export function ServiceLayout({ slug, name, seoTitle, seoDescription, heroSubtit
             </button>
           </motion.div>
         </div>
-      </section>
+      </Section>
 
-      {/* Content */}
-      <div style={{ background: 'var(--bp-light-bg)', minHeight: 400 }}>
-        {children}
-      </div>
+      {/* Тело + FAQ: клавиатура полосой сверху, ниже — сплошной светлый фон */}
+      <Section id="service-body" tone="light" padding="0" backdrop={{ position: 'center 70%', strength: 0.09, height: 'min(100%, 1100px)' }}>
+        <div style={{ minHeight: 400 }}>
+          {children}
+        </div>
 
-      {/* FAQ */}
       {faq && faq.length > 0 && (
-        <section style={{ background: 'var(--bp-light-bg)', padding: '0 24px 80px' }}>
+        <section style={{ padding: '0 24px 80px' }}>
           <div style={{ maxWidth: 800, margin: '0 auto' }}>
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
@@ -200,6 +200,7 @@ export function ServiceLayout({ slug, name, seoTitle, seoDescription, heroSubtit
           `}</style>
         </section>
       )}
+      </Section>
 
       {/* Final CTA */}
       <section className="bp-grain" style={{ position: 'relative', background: 'var(--bp-dark-blue)', padding: '72px 24px', textAlign: 'center' }}>

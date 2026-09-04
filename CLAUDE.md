@@ -124,6 +124,8 @@ Bestpracticeai/
 
 Слаги (`KNOWN_SLUGS`): `corporate-ai-video` (01), `ai-video-training` (02), `neural-networks-training` (03), `vibecoding` (04), `additional` (05).
 
+Каркас (`ServiceLayout`): hero — `<Section tone="dark">` с серверной подложкой (`strength` 0.32, заметнее, чем на главной); тело + FAQ — одна `<Section tone="light">` с клавиатурой полосой сверху (`backdrop.height: 'min(100%, 1100px)'`); финальный CTA «Готовы начать?» — тёмный, без фото. Страница статьи `/blog/:slug` (`ArticlePage`) — тоже `<Section tone="light">` с клавиатурной полосой.
+
 Страница содержит: hero (H1 = name, `hero_subtitle`, CTA по `CTA_BY_SLUG`), блоки `blocks` (JSON: заголовок + markdown/список) в 2 колонки, портфолио `portfolio` (JSON-ссылки, сетка 3 колонки), **видео-портфолио** из `portfolio_videos` (табы 16:9 / 9:16, lazy Kinescope-iframe, подписи), FAQ-аккордеон (`<details>`), CTA-блок «Готовы начать?», хлебные крошки. Helmet + schema.org: `Service`, `BreadcrumbList`, `FAQPage`. Серверный SSR этих страниц — в `server/routes/seo.ts`.
 
 ---
@@ -146,7 +148,7 @@ Bestpracticeai/
 
 ### Каркас секций главной — только через компоненты
 - **`<Section id tone padding backdrop>`** — фон по тону, `.section-topline`, `SectionBackdrop`, для `dark` ещё `bp-grain` + `SectionSpotlight`; **контент рендерится в обёртке с `z-index: 1`** поверх декоративных слоёв. Не собирать секцию вручную.
-- **`<SectionBackdrop tone image? position? strength?>`** — один слой: градиент цвета секции поверх фирменного фото (light → `decorative/keyboard-bg.webp`, dark → `decorative/reviews-bg.webp`). `strength` — доля фото в средней полосе (0.09 / 0.14 по умолчанию). Без `opacity` на слое и без z-index.
+- **`<SectionBackdrop tone image? position? strength?>`** — один слой: градиент цвета секции поверх фирменного фото (light → `decorative/keyboard-bg.webp`, dark → `decorative/reviews-bg.webp`). `strength` — доля фото в средней полосе (0.09 / 0.14 по умолчанию). `height` — высота слоя (по умолчанию вся секция); для длинных страниц (услуга, статья) задавать полосу `min(100%, 1100px)`, иначе `cover` растянет фото в разы. У полосы низ гасится маской (дробный край иначе даёт шов). Без `opacity` на слое и без z-index.
 - **`<SectionHeading title subtitle? tone marginBottom? subtitleMaxWidth?>`** — H2 + подзаголовок с fade-in.
 - **`<CoverflowCarousel items getKey renderCard getShadowImage? renderTag? theme>`** — 3D-coverflow (Услуги, Блог). При `renderTag` — теги, иначе точки. При n < 5 показывает меньше соседей, чтобы элемент не дублировался по кругу.
 - **`<DragCarousel gap theme arrowsAlign>`** — плоская инерционная лента (О нас). На ≤640px стрелки по центру.
@@ -300,4 +302,4 @@ cd client && npm install && npm run dev     # http://localhost:5173 (proxy /api 
 3. Серверный код: `git pull --no-rebase`, `npm install` (**без** `--omit=dev`, нужен `tsx`), `pm2 restart bestpracticeai`.
 4. Проверки только через `https://bestpracticeai.ru` (на 127.0.0.1 nginx отдаёт 301).
 
-*CLAUDE.md v2.0 · Best Practice AI · bestpracticeai.ru · обновлено 2026-09-03*
+*CLAUDE.md v2.1 · Best Practice AI · bestpracticeai.ru · обновлено 2026-09-04*
