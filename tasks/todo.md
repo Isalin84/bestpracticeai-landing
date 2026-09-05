@@ -77,4 +77,4 @@
 - [x] `client/index.html`: убрать preconnect/stylesheet Google Fonts, подключить `/assets/fonts/fonts.css`
 - [x] `tsc`, `npm run build`, локальная проверка шрифтов и повтор репро с заблокированным Google (first-paint 240 мс, API уходят, Montserrat 700 / Lora italic загружены, внешних запросов 0)
 - [x] Обновить CLAUDE.md §5 (шрифты локальные, v2.2), `tasks/lessons.md` (раздел «Внешние ресурсы и доступность из РФ»)
-- [ ] Коммит, деплой dist на прод, проверка на проде тем же репро
+- [x] Коммит `9874105`, деплой dist на прод 2026-09-05 (swap, `dist.old` для отката, pm2 не перезапускался — SSR читает dist/index.html на каждый запрос), проверка на проде: SSR-head без googleapis, `/assets/fonts/*` 200 `font/woff2`, репро с зависшими внешними доменами — страница рисуется и ходит в API
