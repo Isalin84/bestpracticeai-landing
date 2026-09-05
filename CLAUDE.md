@@ -141,7 +141,7 @@ Bestpracticeai/
 --bp-font-heading: 'Montserrat'; --bp-font-body: 'Lora'; --bp-font-ui: 'Inter', 'Montserrat';
 --bp-shadow-card / --bp-shadow-card-hover
 ```
-Шрифты подключены в `index.html` (Google Fonts, `display=swap`). H1 Montserrat 700 · H2 `clamp(32px, 4.5vw, 52px)`, letter-spacing −0.02em · Body Lora 16–18 · UI Montserrat 500–600.
+Шрифты **локальные**: `client/public/assets/fonts/fonts.css` (переменные woff2 Montserrat 400–700, Lora 400–700 + italic 400; сабсеты latin/cyrillic) подключён в `index.html`. Google Fonts не использовать: в РФ запрос к fonts.googleapis.com виснет, а внешний stylesheet в `<head>` блокирует рендер и запуск JS — сайт «не открывался» без VPN (2026-09-05). H1 Montserrat 700 · H2 `clamp(32px, 4.5vw, 52px)`, letter-spacing −0.02em · Body Lora 16–18 · UI Montserrat 500–600.
 
 ### Утилитарные классы
 `.btn-primary` (золото + shimmer), `.btn-secondary` (outline dark-blue), `.btn-primary-outline` (outline gold для тёмного фона), `.bp-grain::after` (плёночное зерно, `mix-blend-mode: overlay`, z-index 0), `.section-topline` (золотая линия 1px сверху секции), `.bp-input`, `.prose-bp` (markdown статей), `.marquee-*`, `.admin-nav-item`.
@@ -302,4 +302,4 @@ cd client && npm install && npm run dev     # http://localhost:5173 (proxy /api 
 3. Серверный код: `git pull --no-rebase`, `npm install` (**без** `--omit=dev`, нужен `tsx`), `pm2 restart bestpracticeai`.
 4. Проверки только через `https://bestpracticeai.ru` (на 127.0.0.1 nginx отдаёт 301).
 
-*CLAUDE.md v2.1 · Best Practice AI · bestpracticeai.ru · обновлено 2026-09-04*
+*CLAUDE.md v2.2 · Best Practice AI · bestpracticeai.ru · обновлено 2026-09-05*
