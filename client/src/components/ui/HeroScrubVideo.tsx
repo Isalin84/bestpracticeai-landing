@@ -39,13 +39,41 @@ export function HeroScrubVideo({ mode, progress }: Props) {
   useEffect(() => {
     if (mode === 'static') return
     const url = mode === 'scrub' ? HERO_VIDEO.scrub : HERO_VIDEO.loop
-    if (document.readyState === 'complete') {
-      setSrc(url)
-      return
+    let cancelled = false
+    let objectUrl: string | null = null
+
+    const start = () => {
+      if (mode !== 'scrub') {
+        setSrc(url)
+        return
+      }
+      // Скраб: качаем файл целиком в память и отдаём как blob:. При потоковой загрузке
+      // каждый сик в недокачанное место ждёт сеть — при первом заходе кадры «замерзают».
+      // Пока качается — остаётся постер; из памяти сики мгновенные. Файл не пережимаем.
+      fetch(url)
+        .then(r => {
+          if (!r.ok) throw new Error(`hero video ${r.status}`)
+          return r.blob()
+        })
+        .then(blob => {
+          if (cancelled) return
+          objectUrl = URL.createObjectURL(blob)
+          setSrc(objectUrl)
+        })
+        .catch(() => {
+          // Фолбэк — обычная потоковая загрузка
+          if (!cancelled) setSrc(url)
+        })
     }
-    const onLoad = () => setSrc(url)
-    window.addEventListener('load', onLoad)
-    return () => window.removeEventListener('load', onLoad)
+
+    if (document.readyState === 'complete') start()
+    else window.addEventListener('load', start, { once: true })
+
+    return () => {
+      cancelled = true
+      window.removeEventListener('load', start)
+      if (objectUrl) URL.revokeObjectURL(objectUrl)
+    }
   }, [mode])
 
   useEffect(() => {

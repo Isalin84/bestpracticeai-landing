@@ -80,7 +80,7 @@ Bestpracticeai/
   - `scrub` (десктоп): секция 250vh со sticky-слоем, видео перематывается скроллом (all-intra mp4, lerp 0.5);
   - `loop` (≤767px или `pointer: coarse`): зацикленный mp4 720p;
   - `static` (`prefers-reduced-motion`): постер.
-- `src` подставляется после `window load`, до этого — постер webp (LCP).
+- `src` подставляется после `window load`, до этого — постер webp (LCP). В scrub-режиме файл сначала целиком скачивается `fetch` → `blob:` (иначе при первом заходе сики в недокачанные места ждут сеть и кадры «замерзают»); пока качается — постер. Фолбэк при ошибке fetch — обычный URL. Видео не пережимать ради этого.
 - `ACTIVE_HERO = 'hero3'`; наборы hero1–hero3 лежат в `public/assets/hero/` (scrub ≈6–7 МБ, loop ≈1.1–1.5 МБ, poster ≈30 КБ).
 - Левая колонка: бейдж «AI Студия · bestpracticeai.ru», H1 «Генеративные нейросети для бизнеса и частных лиц» (пословная анимация, «для бизнеса» золотом), подзаголовок, кнопки «Оставить заявку» (`.btn-primary`) и «Смотреть услуги» (`.btn-primary-outline`).
 - Правая колонка: `DeviceFrame` (glow + золотая рамка, без мокапа планшета) с Kinescope-iframe; ID видео из `settings.hero_video_id`.
