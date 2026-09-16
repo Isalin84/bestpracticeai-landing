@@ -13,6 +13,20 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   return res.json()
 }
 
+// Один запрос /api/settings на загрузку страницы: Home и useYandexMetrika делят промис.
+// При ошибке кэш сбрасывается, чтобы повторный вызов мог попробовать снова.
+let settingsPromise: Promise<import('../types').Settings> | null = null
+
+function getSettingsCached(): Promise<import('../types').Settings> {
+  if (!settingsPromise) {
+    settingsPromise = request<import('../types').Settings>('/settings').catch(err => {
+      settingsPromise = null
+      throw err
+    })
+  }
+  return settingsPromise
+}
+
 export const api = {
   // Public
   getArticles: (page = 1, limit = 6) =>
@@ -25,8 +39,7 @@ export const api = {
     request<import('../types').Review[]>('/reviews'),
   getPortfolio: (serviceSlug: string) =>
     request<import('../types').PortfolioVideo[]>(`/portfolio?service_slug=${serviceSlug}`),
-  getSettings: () =>
-    request<import('../types').Settings>('/settings'),
+  getSettings: () => getSettingsCached(),
   getServices: () =>
     request<import('../types').Service[]>('/services'),
   getService: (slug: string) =>
@@ -95,6 +108,8 @@ export const api = {
     request<{ message: string }>(`/services/admin/${slug}`, { method: 'DELETE' }),
 
   // Admin settings
-  adminUpdateSetting: (key: string, value: string) =>
-    request<{ message: string }>(`/settings/admin/${key}`, { method: 'PUT', body: JSON.stringify({ value }) }),
+  adminUpdateSetting: (key: string, value: string) => {
+    settingsPromise = null
+    return request<{ message: string }>(`/settings/admin/${key}`, { method: 'PUT', body: JSON.stringify({ value }) })
+  },
 }

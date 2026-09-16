@@ -18,7 +18,7 @@
 **Цель посетителя:** познакомиться с услугами → оставить заявку или позвонить
 **Аудитория:** B2B (AI-консалтинг, видеотренинги, промо-ролики) + B2C
 
-**Прод:** VPS в РФ (185.139.70.35, FirstByte), nginx (HTTPS с **HTTP/2** — обязателен: из мобильных сетей РФ проходят только первые 2–3 TLS-соединения) + pm2. Фронт собирается локально и заливается как `client/dist` (см. `tasks/` и память деплоя). 152-ФЗ: политика на `/privacy`, чекбокс согласия в форме, cookie-баннер.
+**Прод:** облачный сервер **Selectel** (Москва ru-7a, **135.106.216.64**, Ubuntu 24.04, 1 vCPU / 1 ГБ / 10 ГБ, swap 2 ГБ; переезд с FirstByte 185.139.70.35 — 2026-09-16), nginx (HTTPS с **HTTP/2** — обязателен: из мобильных сетей РФ проходят только первые 2–3 TLS-соединения; brotli/gzip static; кэш-заголовки на `/assets`) + pm2 (`ecosystem.config.cjs` в корне репо). Фронт собирается локально и заливается как `client/dist` (см. §16 и память деплоя). 152-ФЗ: политика на `/privacy`, чекбокс согласия в форме, cookie-баннер.
 
 ---
 
@@ -58,6 +58,7 @@ Bestpracticeai/
 │   ├── data/servicesFallback.ts   сид + фолбэк контента услуг
 │   ├── middleware/authMiddleware.ts
 │   └── index.ts
+├── ecosystem.config.cjs   pm2-конфиг прода (node --import tsx/esm index.ts, cwd server/, порт 3001)
 ├── tasks/todo.md, tasks/lessons.md
 ├── AGENTS.md (этот файл), CLAUDE.md (подключает AGENTS.md), CONTENT.md, PRIVACY_POLICY.md, ASSETS_PROMPTS.md
 ```
@@ -259,7 +260,9 @@ GET  /health · GET /sitemap.xml · SSR: / , /blog/:slug , /services/:slug , /pr
 
 - Hero-видео подключается после `window load`, до этого постер; на мобильных только loop 720p.
 - Изображения `loading="lazy"`, ассеты webp (карточки услуг 19–50 КБ, подложки 25–30 КБ, иконки 128px ≈10 КБ).
-- `ServicePage` — отдельный чанк (`React.lazy`); основной бандл ≈830 КБ (≈255 КБ gzip).
+- Код-сплиттинг (2026-09-16): `React.lazy` для `ServicePage`, `ArticlePage`, `PrivacyPage` и всех `/admin/*`; `manualChunks` в `vite.config.ts` выделяют `vendor-react` и `vendor-motion`. Главная грузит entry ≈138 КБ + vendor-react ≈275 КБ + vendor-motion ≈166 КБ (≈162 КБ brotli суммарно) вместо одного бандла 834 КБ. `vite-plugin-compression2` кладёт `.gz` и `.br` рядом с ассетами — nginx отдаёт их через `gzip_static`/`brotli_static`.
+- `index.html`: preload кириллических `montserrat-cyrillic.woff2`/`lora-cyrillic.woff2` и постера активного hero, preconnect к `mc.yandex.ru`. При смене `ACTIVE_HERO` обновить preload постера.
+- `/api/settings` запрашивается один раз на страницу (кэш промиса в `api/client.ts`, сбрасывается в `adminUpdateSetting`).
 - Kinescope-iframe только в viewport; фото-подложка секций — один слой без group-opacity.
 
 ---
@@ -300,9 +303,11 @@ cd client && npm install && npm run dev     # http://localhost:5173 (proxy /api 
 
 ## 16. ДЕПЛОЙ (кратко; подробности — в памяти и `tasks/`)
 
-1. Локально `npm run build` в client → tar `dist` → scp на сервер → распаковать в `dist.new` → `chown root:root`, `chmod 755/644` → swap `dist` ↔ `dist.old`.
+1. Локально `npm run build` в client → `tar czf dist.tgz --exclude='assets/hero/hero1-*' --exclude='assets/hero/hero2-*' -C dist .` (в сборку не тащить неактивные hero-видео, ~17 МБ) → scp на `root@135.106.216.64` → распаковать в `dist.new` → `chown -R root:root`, `chmod 755/644` → swap `dist` ↔ `dist.old`. `.gz/.br` уже внутри dist.
 2. Бэкап БД перед рискованными операциями (`better-sqlite3 .backup()` в `/root/db-backups`).
-3. Серверный код: `git pull --no-rebase`, `npm install` (**без** `--omit=dev`, нужен `tsx`), `pm2 restart bestpracticeai`.
+3. Серверный код: `git pull`, `npm install` в `server/` (**без** `--omit=dev`, нужен `tsx`), `pm2 restart bestpracticeai` (процесс из `ecosystem.config.cjs`, автозапуск `pm2-root.service` + `pm2 save`).
+5. nginx: `/etc/nginx/sites-available/bestpracticeai` (+ `snippets/bp-security.conf` — заголовки безопасности, подключается в каждом location с собственным `add_header`, иначе nginx их не наследует). Хэшированные `/assets/*-XXXXXXXX.js|css` — `Cache-Control: immutable, 1 год`; `public/`-ассеты (fonts/hero/services/…) — 30 дней; SSR-ответы — `no-cache`. Сертификат Let's Encrypt перенесён со старого сервера (`/etc/letsencrypt`), продление — `certbot.timer` (nginx-authenticator).
+6. Express стоит за nginx с `app.set('trust proxy', 1)` — без него rate-limit заявок/логина считает всех посетителей одним IP 127.0.0.1.
 4. Проверки только через `https://bestpracticeai.ru` (на 127.0.0.1 nginx отдаёт 301).
 
 ## 17. ДОСТУПНОСТЬ ИЗ РФ (обязательно к прочтению перед правками nginx / index.html / хостинга)
@@ -315,6 +320,6 @@ cd client && npm install && npm run dev     # http://localhost:5173 (proxy /api 
 3. **Как диагностировать «не открывается из РФ»:** сначала nginx access.log по российским IP (ip-api batch по IP, скачавшим бандл): если RU-клиенты качают HTML/JS, но не ходят в `/api/*` — проблема на клиенте или в сети, не на сервере. Потом `tcpdump -n -i any port 443` на сервере и разбор по потокам (доходит ли хвост ClientHello, отвечает ли клиент на ServerHello). check-host.net даёт только 3 RU-узла в дата-центрах — они не показывают проблемы мобильных сетей.
 4. **Запасной план, если вернётся:** тикет хостеру FirstByte (anti-DDoS на 185.139.70.35, ограничения на /24), IP из другой подсети, либо перенос на другой российский хостинг.
 
-**Планы владельца (2026-09-05):** владелец собирается переводить все проекты на **Selectel**. При переносе bestpracticeai.ru сохранить: nginx с HTTP/2 и теми же location-блоками (`/` и `@seo` → Express 3001, `/api/`, `/sitemap.xml`, `/health`), pm2 с `--import tsx/esm`, `.env`, SQLite-файл `server/bestpractice.db` (перенести с бэкапом), Let's Encrypt через certbot, ufw 22/80/443. После переноса — проверить с мобильной сети РФ без VPN, а не только с VPN/десктопа.
+**Переезд на Selectel выполнен 2026-09-16** (135.106.216.64, Москва). Перенесены `.env`, SQLite (через `.backup()`), `/etc/letsencrypt`, nginx-конфиг с HTTP/2 и теми же location-блоками; Node 22, pm2 из `ecosystem.config.cjs`, ufw 22/80/443, fail2ban, sshd только по ключу, swap 2 ГБ. Старый сервер FirstByte после смены DNS работает как прозрачный прокси на новый IP (пока живут DNS-кэши), потом отключается. Схема переезда на любой другой хост: бутстрап → перенос секретов/БД/сертификата через Мак → деплой → `curl --resolve` и Playwright с `--host-resolver-rules` на новый IP **до** смены DNS → финальный снимок БД при остановленном старом pm2 → старый nginx в прокси → A-записи через API reg.ru (`zone/update_records`, нужен альтернативный пароль API и IP в allowlist) → `certbot renew --dry-run` → проверка с мобильной сети РФ без VPN.
 
-*AGENTS.md v2.3 (бывший CLAUDE.md) · Best Practice AI · bestpracticeai.ru · обновлено 2026-09-05*
+*AGENTS.md v2.4 (бывший CLAUDE.md) · Best Practice AI · bestpracticeai.ru · обновлено 2026-09-16*

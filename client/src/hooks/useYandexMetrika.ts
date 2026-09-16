@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { api } from '../api/client'
 
 function injectMetrika(id: string) {
   if (!id || document.getElementById('ym-script')) return
@@ -34,9 +35,8 @@ function injectMetrika(id: string) {
 
 export function useYandexMetrika() {
   useEffect(() => {
-    fetch('/api/settings')
-      .then(r => r.json())
-      .then((data: Record<string, string>) => {
+    api.getSettings()
+      .then(data => {
         const metrikaId = data.yandex_metrika_id || ''
         if (metrikaId) injectMetrika(metrikaId)
       })

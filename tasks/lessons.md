@@ -42,3 +42,12 @@
 - На сервере `npm install` без `--omit=dev`: `tsx` живёт в devDependencies, а pm2 запускает `--import tsx/esm` — иначе `ERR_MODULE_NOT_FOUND 'tsx'` и процесс в restart-loop.
 - Проверки после деплоя делать через https://bestpracticeai.ru, а не 127.0.0.1 (nginx отвечает 301 на http).
 - Если SSH-ключ внезапно отклоняется, не перебирать ключи циклом — подождать пару минут и повторить одну попытку.
+
+## Переезд хостинга и раздача статики (волна 9, 2026-09-16)
+- Ubuntu-nginx по умолчанию сжимает только `text/html` (`gzip_types` закомментирован) и не ставит `Cache-Control` на статику — бандл 834 КБ уезжал как есть на каждый визит. При любом новом сервере первым делом: `gzip_types` + `gzip_static`/`brotli_static` (предсжатые файлы из сборки) + `immutable` на хэшированные ассеты. Проверять `curl -I -H 'Accept-Encoding: br'` — не верить «gzip on».
+- В nginx `add_header` в location отменяет наследование заголовков из `server{}` — заголовки безопасности держать в snippet и включать в каждый location, где есть свой `add_header`. Проверять счётчик заголовков curl'ом.
+- nginx 1.24 (Ubuntu 24.04) не знает `http2 on;` — только `listen 443 ssl http2;`. Регулярку с `{8}` в `location ~*` брать в кавычки.
+- pm2 `script: 'tsx'` работает только при глобальном tsx; переносимый вариант — `script: 'index.ts'` + `interpreter: 'node'` + `interpreter_args: '--import tsx/esm'`. Конфиг pm2 держать в репо (`ecosystem.config.cjs`), иначе он теряется при переезде.
+- Express за nginx без `app.set('trust proxy', 1)` — все посетители для rate-limit один IP; ловится по `ValidationError ... X-Forwarded-For` в pm2 error.log.
+- Смена IP без потери заявок: финальный снимок БД при остановленном старом pm2, затем старый nginx превращается в прокси на новый IP — DNS-кэши не создают «расщеплённой» БД. Сертификат переносится tar'ом `/etc/letsencrypt` — HTTPS на новом сервере работает до смены DNS, `certbot renew --dry-run` делать уже после.
+- Проверка нового сервера до DNS: `curl --resolve host:443:IP` + Playwright `--host-resolver-rules=MAP host IP` (сравнить статусы/размеры со старым сервером), тестовая заявка → лог pm2 без «Email notification failed» → удалить тестовую строку.

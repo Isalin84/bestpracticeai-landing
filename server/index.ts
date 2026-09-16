@@ -15,6 +15,10 @@ import { seoRouter } from './routes/seo.js'
 const app = express()
 const PORT = process.env.PORT || 3001
 
+// За nginx: брать IP клиента из X-Forwarded-For (первый прокси), иначе express-rate-limit
+// видит 127.0.0.1 у всех и лимиты заявок/логина срабатывают на всех посетителей разом.
+app.set('trust proxy', 1)
+
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {

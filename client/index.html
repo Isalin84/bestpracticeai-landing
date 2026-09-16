@@ -14,6 +14,14 @@
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="ru_RU" />
 
+    <!-- Preconnect к Яндекс.Метрике (грузится асинхронно после согласия на cookies) -->
+    <link rel="preconnect" href="https://mc.yandex.ru" />
+
+    <!-- Preload критичных ассетов: кириллические сабсеты шрифтов и постер hero (LCP) -->
+    <link rel="preload" href="/assets/fonts/montserrat-cyrillic.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/fonts/lora-cyrillic.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/hero/hero3-poster.webp" as="image" fetchpriority="high" />
+
     <!-- Шрифты только со своего домена: внешний stylesheet (Google Fonts) в РФ виснет и блокирует рендер и запуск JS -->
     <link rel="stylesheet" href="/assets/fonts/fonts.css" />
   </head>
