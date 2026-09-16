@@ -54,10 +54,6 @@ export function Media() {
   const [hasMore, setHasMore] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    loadArticles(1)
-  }, [])
-
   const loadArticles = async (p: number) => {
     setLoading(true)
     try {
@@ -65,9 +61,26 @@ export function Media() {
       setArticles(prev => p === 1 ? res.articles : [...prev, ...res.articles])
       setHasMore(res.hasMore)
       setPage(p)
-    } catch {}
+    } catch {
+      // сеть/API недоступны — оставляем уже загруженный список
+    }
     setLoading(false)
   }
+
+  // Первая страница: loading уже true по умолчанию, поэтому без синхронного setState в эффекте
+  useEffect(() => {
+    let cancelled = false
+    api.getArticles(1, PAGE_SIZE)
+      .then(res => {
+        if (cancelled) return
+        setArticles(res.articles)
+        setHasMore(res.hasMore)
+        setPage(1)
+      })
+      .catch(() => { /* сеть/API недоступны — покажем пустой блок */ })
+      .finally(() => { if (!cancelled) setLoading(false) })
+    return () => { cancelled = true }
+  }, [])
 
   const items: BlogItem[] = [
     ...articles.map((article): BlogItem => ({ kind: 'article', key: article.slug, article })),

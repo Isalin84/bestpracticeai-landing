@@ -2,6 +2,7 @@ import { Router } from 'express'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import rateLimit from 'express-rate-limit'
+import { JWT_SECRET } from '../config/jwtSecret.js'
 
 export const authRouter = Router()
 
@@ -26,7 +27,7 @@ authRouter.post('/login', loginLimiter, async (req, res) => {
     return
   }
 
-  const token = jwt.sign({ admin: true }, process.env.JWT_SECRET || 'dev-secret-change-in-prod', { expiresIn: '8h' })
+  const token = jwt.sign({ admin: true }, JWT_SECRET, { expiresIn: '8h' })
 
   res.cookie('bp_admin_token', token, {
     httpOnly: true,
@@ -47,7 +48,7 @@ authRouter.get('/me', (req, res) => {
   const token = req.cookies?.bp_admin_token
   if (!token) { res.status(401).json({ message: 'Not authenticated' }); return }
   try {
-    jwt.verify(token, process.env.JWT_SECRET || 'dev-secret-change-in-prod')
+    jwt.verify(token, JWT_SECRET)
     res.json({ admin: true })
   } catch {
     res.status(401).json({ message: 'Token expired' })

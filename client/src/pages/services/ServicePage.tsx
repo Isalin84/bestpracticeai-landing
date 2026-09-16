@@ -145,25 +145,28 @@ function PortfolioLinks({ items }: { items: Service['portfolio'] }) {
   )
 }
 
+// Обёртка: key=slug пересоздаёт контент при смене услуги — состояние сбрасывается без setState в эффекте
 export function ServicePage() {
   const { slug = '' } = useParams()
+  return <ServicePageContent key={slug} slug={slug} />
+}
+
+function ServicePageContent({ slug }: { slug: string }) {
+  const known = KNOWN_SLUGS.includes(slug)
   const [service, setService] = useState<Service | null>(null)
-  const [status, setStatus] = useState<'loading' | 'ok' | 'notfound' | 'error'>('loading')
+  const [status, setStatus] = useState<'loading' | 'ok' | 'notfound' | 'error'>(known ? 'loading' : 'notfound')
   const [videos, setVideos] = useState<PortfolioVideo[]>([])
 
   useEffect(() => {
-    if (!KNOWN_SLUGS.includes(slug)) {
-      setStatus('notfound')
-      return
-    }
-    setStatus('loading')
-    setService(null)
+    if (!known) return
+    let cancelled = false
     api.getService(slug)
-      .then(s => { setService(s); setStatus('ok') })
-      .catch(err => setStatus(/not found/i.test(String(err?.message)) ? 'notfound' : 'error'))
-    api.getPortfolio(slug).then(setVideos).catch(() => setVideos([]))
+      .then(s => { if (!cancelled) { setService(s); setStatus('ok') } })
+      .catch(err => { if (!cancelled) setStatus(/not found/i.test(String(err?.message)) ? 'notfound' : 'error') })
+    api.getPortfolio(slug).then(v => { if (!cancelled) setVideos(v) }).catch(() => { if (!cancelled) setVideos([]) })
     window.scrollTo(0, 0)
-  }, [slug])
+    return () => { cancelled = true }
+  }, [slug, known])
 
   if (status === 'notfound') return <NotFound />
 

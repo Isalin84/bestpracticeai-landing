@@ -31,7 +31,9 @@ export function AdminArticles() {
         setArticles(prev => [created, ...prev])
       }
       setEditing(null)
-    } catch {}
+    } catch (e) {
+      alert(e instanceof Error && e.message ? e.message : 'Не удалось сохранить')
+    }
     setSaving(false)
   }
 

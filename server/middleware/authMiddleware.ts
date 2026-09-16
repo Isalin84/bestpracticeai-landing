@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
+import { JWT_SECRET } from '../config/jwtSecret.js'
 
 export function authMiddleware(req: Request, res: Response, next: NextFunction) {
   const token = req.cookies?.bp_admin_token
@@ -10,7 +11,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
   }
 
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET || 'dev-secret-change-in-prod')
+    const payload = jwt.verify(token, JWT_SECRET)
     ;(req as any).admin = payload
     next()
   } catch {

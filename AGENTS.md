@@ -309,6 +309,8 @@ cd client && npm install && npm run dev     # http://localhost:5173 (proxy /api 
 5. nginx: `/etc/nginx/sites-available/bestpracticeai` (+ `snippets/bp-security.conf` — заголовки безопасности, подключается в каждом location с собственным `add_header`, иначе nginx их не наследует). Хэшированные `/assets/*-XXXXXXXX.js|css` — `Cache-Control: immutable, 1 год`; `public/`-ассеты (fonts/hero/services/…) — 30 дней; SSR-ответы — `no-cache`. Сертификат Let's Encrypt перенесён со старого сервера (`/etc/letsencrypt`), продление — `certbot.timer` (nginx-authenticator).
 6. Express стоит за nginx с `app.set('trust proxy', 1)` — без него rate-limit заявок/логина считает всех посетителей одним IP 127.0.0.1. Слушает только `HOST` (127.0.0.1 из `ecosystem.config.cjs`), снаружи порт 3001 закрыт и ufw.
 4. Проверки только через `https://bestpracticeai.ru` (на 127.0.0.1 nginx отдаёт 301).
+7. Скрипта `deploy.sh` больше нет (удалён 2026-09-16: ставил nginx без HTTP/2 и клонировал старый репозиторий). Деплой — только по шагам выше.
+8. `JWT_SECRET` обязателен: без него сервер падает на старте (`server/config/jwtSecret.ts`), dev-фолбэк только при `NODE_ENV=development`.
 
 ## 17. ДОСТУПНОСТЬ ИЗ РФ (обязательно к прочтению перед правками nginx / index.html / хостинга)
 

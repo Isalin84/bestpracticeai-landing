@@ -39,7 +39,9 @@ export function AdminPortfolio() {
         setVideos(prev => [created, ...prev])
       }
       setEditing(null)
-    } catch {}
+    } catch (e) {
+      alert(e instanceof Error && e.message ? e.message : 'Не удалось сохранить')
+    }
     setSaving(false)
   }
 
@@ -110,14 +112,14 @@ export function AdminPortfolio() {
             ].map(f => (
               <div key={f.key} style={{ marginBottom: 14 }}>
                 <label style={lbl}>{f.label}</label>
-                <input value={(editing as any)[f.key] || ''} onChange={e => setEditing(prev => ({ ...prev, [f.key]: e.target.value }))} style={inp} />
+                <input value={String((editing as Record<string, unknown>)[f.key] ?? '')} onChange={e => setEditing(prev => ({ ...prev, [f.key]: e.target.value }))} style={inp} />
               </div>
             ))}
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
               <div>
                 <label style={lbl}>Соотношение сторон</label>
-                <select value={editing.aspect_ratio} onChange={e => setEditing(prev => ({ ...prev, aspect_ratio: e.target.value as any }))} style={inp}>
+                <select value={editing.aspect_ratio} onChange={e => setEditing(prev => ({ ...prev, aspect_ratio: e.target.value as '16:9' | '9:16' }))} style={inp}>
                   <option value="16:9">16:9 (горизонтальное)</option>
                   <option value="9:16">9:16 (вертикальное)</option>
                 </select>

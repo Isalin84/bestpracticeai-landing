@@ -23,3 +23,13 @@ export const HERO_SOURCES = {
 } as const
 
 export const HERO_VIDEO = HERO_SOURCES[ACTIVE_HERO]
+
+export type HeroVideoMode = 'scrub' | 'loop' | 'static'
+
+/** Режим фонового видео Hero; вызывается один раз на маунте (Hero.tsx). */
+export function getHeroVideoMode(): HeroVideoMode {
+  if (typeof window === 'undefined') return 'static'
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return 'static'
+  if (window.matchMedia('(max-width: 767px), (pointer: coarse)').matches) return 'loop'
+  return 'scrub'
+}

@@ -25,8 +25,8 @@ export function Contacts() {
       })
       setSuccess(true)
       reset()
-    } catch (e: any) {
-      toast.error(e.message || 'Ошибка отправки. Попробуйте ещё раз.')
+    } catch (e) {
+      toast.error(e instanceof Error && e.message ? e.message : 'Ошибка отправки. Попробуйте ещё раз.')
     }
   }
 
@@ -52,7 +52,7 @@ export function Contacts() {
   })
 
   const fieldProps = (name: keyof LeadFormData, options?: Parameters<typeof register>[1]) => {
-    const reg = register(name as string as any, options as any)
+    const reg = register(name, options)
     return {
       ...reg,
       onFocus: () => setFocused(name),
@@ -196,7 +196,7 @@ export function Contacts() {
                     <input
                       {...fieldProps('phone', {
                         required: 'Введите телефон',
-                        pattern: { value: /^[\d\s\+\-\(\)]{10,}$/, message: 'Некорректный номер' },
+                        pattern: { value: /^[\d\s+\-()]{10,}$/, message: 'Некорректный номер' },
                       })}
                       type="tel"
                       className="bp-input"

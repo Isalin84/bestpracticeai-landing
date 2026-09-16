@@ -1,15 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { MotionValue } from 'framer-motion'
-import { HERO_VIDEO } from '../../config/heroVideo'
-
-export type HeroVideoMode = 'scrub' | 'loop' | 'static'
-
-export function getHeroVideoMode(): HeroVideoMode {
-  if (typeof window === 'undefined') return 'static'
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return 'static'
-  if (window.matchMedia('(max-width: 767px), (pointer: coarse)').matches) return 'loop'
-  return 'scrub'
-}
+import { HERO_VIDEO, type HeroVideoMode } from '../../config/heroVideo'
 
 interface Props {
   mode: HeroVideoMode

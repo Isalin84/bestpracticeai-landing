@@ -16,7 +16,7 @@ export function AdminLogin() {
     try {
       await api.login(password)
       navigate('/admin/dashboard')
-    } catch (err: any) {
+    } catch {
       setError('Неверный пароль')
     }
     setLoading(false)

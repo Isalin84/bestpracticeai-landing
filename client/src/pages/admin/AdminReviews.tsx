@@ -57,7 +57,9 @@ export function AdminReviews() {
         setReviews(prev => [...prev, created])
       }
       setEditing(null)
-    } catch {}
+    } catch (e) {
+      alert(e instanceof Error && e.message ? e.message : 'Не удалось сохранить')
+    }
     setSaving(false)
   }
 
@@ -105,7 +107,7 @@ export function AdminReviews() {
             ].map(field => (
               <div key={field.key} style={{ marginBottom: 14 }}>
                 <label style={lbl}>{field.label}</label>
-                <input value={(editing as any)[field.key] || ''} onChange={e => setEditing(prev => ({ ...prev, [field.key]: e.target.value }))} style={inp} />
+                <input value={String((editing as Record<string, unknown>)[field.key] ?? '')} onChange={e => setEditing(prev => ({ ...prev, [field.key]: e.target.value }))} style={inp} />
               </div>
             ))}
             <div style={{ marginBottom: 14 }}>

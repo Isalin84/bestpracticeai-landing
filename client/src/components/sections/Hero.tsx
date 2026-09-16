@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react'
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion'
 import { DeviceFrame } from '../ui/DeviceFrame'
-import { HeroScrubVideo, getHeroVideoMode } from '../ui/HeroScrubVideo'
+import { HeroScrubVideo } from '../ui/HeroScrubVideo'
+import { getHeroVideoMode } from '../../config/heroVideo'
 import { scrollToId } from '../../hooks/useLenis'
 
 interface Props {

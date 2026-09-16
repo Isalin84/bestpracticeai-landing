@@ -31,6 +31,7 @@ export function CoverflowCarousel<T>({ items, getKey, renderCard, getShadowImage
   const [index, setIndex] = useState(initialIndex)
   const [dragX, setDragX] = useState(0)
   const dragStart = useRef<number | null>(null)
+  const [pressed, setPressed] = useState(false) // зеркало dragStart для рендера (ref в рендере читать нельзя)
   const draggingRef = useRef(false)
   const wheelAcc = useRef(0)
   const wheelLock = useRef(false)
@@ -67,6 +68,7 @@ export function CoverflowCarousel<T>({ items, getKey, renderCard, getShadowImage
     if (e.button !== 0) return
     dragStart.current = e.clientX
     draggingRef.current = false
+    setPressed(true)
   }
   const onPointerMove = (e: React.PointerEvent) => {
     if (dragStart.current === null) return
@@ -81,6 +83,7 @@ export function CoverflowCarousel<T>({ items, getKey, renderCard, getShadowImage
     if (dragStart.current === null) return
     const dx = e.clientX - dragStart.current
     dragStart.current = null
+    setPressed(false)
     if (!draggingRef.current) return // обычный клик — отдаём браузеру и Link
     // после драга активная карточка сменится — фокус со ссылки (станет aria-hidden) снимаем
     const active = document.activeElement
@@ -93,7 +96,10 @@ export function CoverflowCarousel<T>({ items, getKey, renderCard, getShadowImage
   }
   // Указатель ушёл со сцены до порога драга (захвата ещё нет) — сбрасываем незавершённое нажатие
   const onPointerLeave = () => {
-    if (dragStart.current !== null && !draggingRef.current) dragStart.current = null
+    if (dragStart.current !== null && !draggingRef.current) {
+      dragStart.current = null
+      setPressed(false)
+    }
   }
 
   // --- горизонтальное колесо / трекпад ---
@@ -146,7 +152,7 @@ export function CoverflowCarousel<T>({ items, getKey, renderCard, getShadowImage
           height: cardH + (isNarrow ? 40 : 96), // запас под цветную тень карточки
           perspective: 1800,
           perspectiveOrigin: '50% 45%',
-          cursor: dragStart.current !== null ? 'grabbing' : 'grab',
+          cursor: pressed ? 'grabbing' : 'grab',
           touchAction: 'pan-y',
           userSelect: 'none',
         }}
@@ -185,7 +191,7 @@ export function CoverflowCarousel<T>({ items, getKey, renderCard, getShadowImage
                 marginLeft: -cardW / 2,
                 transform: `translate3d(${x}px, 0, ${z}px) rotateY(${rotate}deg) scale(${scale})`,
                 transformStyle: 'preserve-3d',
-                transition: dragStart.current !== null
+                transition: pressed
                   ? 'none'
                   : 'transform 0.65s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease, filter 0.5s ease',
                 opacity,

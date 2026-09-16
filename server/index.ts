@@ -1,4 +1,5 @@
 import 'dotenv/config'
+import './config/jwtSecret.js' // проверка JWT_SECRET на старте
 import express from 'express'
 import helmet from 'helmet'
 import cors from 'cors'
