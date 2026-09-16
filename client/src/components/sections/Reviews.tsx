@@ -122,7 +122,7 @@ export function Reviews() {
 
               <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                 {review.photo_url
-                  ? <img src={review.photo_url} alt={review.name} style={{ width: 72, height: 72, borderRadius: '50%', objectFit: 'cover', border: '3px solid var(--bp-gold)' }} draggable={false} />
+                  ? <img src={review.photo_url} alt={review.name} style={{ width: 72, height: 72, flexShrink: 0, aspectRatio: '1 / 1', borderRadius: '50%', objectFit: 'cover', border: '3px solid var(--bp-gold)' }} draggable={false} />
                   : <Monogram name={review.name} />
                 }
                 <div>
