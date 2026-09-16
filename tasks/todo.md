@@ -112,3 +112,17 @@
 - [x] Причина: scrub-mp4 (5.9 МБ) подключался как URL с потоковой загрузкой — сики в недокачанные места ждут сеть, кадры «замерзают»; при повторном заходе файл в кэше (30 дней), поэтому плавно.
 - [x] Фикс без пережатия (`HeroScrubVideo.tsx`): после `window load` fetch → blob → `blob:`-src; до готовности постер; фолбэк на URL. Проверено Playwright локально и на проде на сети 1.5 Мбит/с: buffered = duration, сики монотонные, без seeking-столлов.
 - [x] Деплой dist на Selectel (entry `index-If8uTwBB.js`), `dist.old` для отката.
+
+### Ревью волны 9 (/code-review, 2026-09-16) и техдолг
+Ревью диффа b72e7c2..e5a17c5 пятью агентами (правила, баги, история git, комментарии, техдолг). Исправлено коммитом 21464bc: Express слушал 0.0.0.0 (HOST из ecosystem игнорировался) → `app.listen(PORT, HOST)`; кэш `/api/settings` сбрасывается после завершения PUT; AbortController на blob-загрузке hero; устаревшие утверждения про cookie-баннер (удалён в 50ec449) в index.html, AdminSettings и AGENTS.md §1/§9.
+
+**Техдолг (по приоритету, не сделано — на решение владельца):**
+- [ ] HIGH `server/routes/auth.ts:26`, `middleware/authMiddleware.ts:11` — фолбэк `JWT_SECRET='dev-secret-change-in-prod'`; при отсутствии переменной падать на старте (S)
+- [ ] HIGH `npx eslint .` в client — 20 ошибок, часть реальные React-19 баги: `ServicePage.tsx:156` setState в effect, `CoverflowCarousel.tsx:149,159` ref в рендере, `Media.tsx:58` использование до объявления (M)
+- [ ] HIGH `deploy.sh` устарел и опасен: nginx только `listen 80` без `ssl http2` (нарушает §17), старый репо-URL, без brotli/кэша — удалить или заменить ссылкой на §16 (M)
+- [ ] MED admin POST/PUT в `reviews.ts`, `portfolio.ts`, `articles.ts` без валидации обязательных полей, деструктуризация повторяется ×3 — общий валидатор (M)
+- [ ] MED `leads.ts:27` — nodemailer transporter создаётся на каждый POST (S)
+- [ ] MED JSON-LD/title услуг дублируются в `server/routes/seo.ts` и `ServiceLayout.tsx:27-78` (M)
+- [ ] MED `server/package.json`: `@types/cookie-parser` в dependencies; `sanitize-html`, `multer` не используются; скрипты `build`/`start` (tsc → dist) мёртвые, прод на tsx (S)
+- [ ] LOW `client/public/favicon.svg` — шаблонная фиолетовая иконка, не бренд (S); hero1/hero2 (~16 МБ) лежат в репо, не используются (S); в корне `SEO-bestpracticeai-brief.md`, `Assets/New Assets/`, lock-файл `~$st Practice.docx` (S)
+- [ ] LOW тестов нет, CI нет (L); `better-sqlite3` 9→13, `express` 4→5 — плановый апгрейд
