@@ -18,7 +18,7 @@
 **Цель посетителя:** познакомиться с услугами → оставить заявку или позвонить
 **Аудитория:** B2B (AI-консалтинг, видеотренинги, промо-ролики) + B2C
 
-**Прод:** облачный сервер **Selectel** (Москва ru-7a, **135.106.216.64**, Ubuntu 24.04, 1 vCPU / 1 ГБ / 10 ГБ, swap 2 ГБ; переезд с FirstByte 185.139.70.35 — 2026-09-16), nginx (HTTPS с **HTTP/2** — обязателен: из мобильных сетей РФ проходят только первые 2–3 TLS-соединения; brotli/gzip static; кэш-заголовки на `/assets`) + pm2 (`ecosystem.config.cjs` в корне репо). Фронт собирается локально и заливается как `client/dist` (см. §16 и память деплоя). 152-ФЗ: политика на `/privacy`, чекбокс согласия в форме, cookie-баннер.
+**Прод:** облачный сервер **Selectel** (Москва ru-7a, **135.106.216.64**, Ubuntu 24.04, 1 vCPU / 1 ГБ / 10 ГБ, swap 2 ГБ; переезд с FirstByte 185.139.70.35 — 2026-09-16), nginx (HTTPS с **HTTP/2** — обязателен: из мобильных сетей РФ проходят только первые 2–3 TLS-соединения; brotli/gzip static; кэш-заголовки на `/assets`) + pm2 (`ecosystem.config.cjs` в корне репо). Фронт собирается локально и заливается как `client/dist` (см. §16 и память деплоя). 152-ФЗ: политика на `/privacy`, чекбокс согласия в форме; cookie-баннера нет (удалён, см. §9).
 
 ---
 
@@ -233,7 +233,7 @@ GET  /health · GET /sitemap.xml · SSR: / , /blog/:slug , /services/:slug , /pr
 ## 9. 152-ФЗ И COOKIES
 
 - `/privacy` (PRIVACY_POLICY.md), ссылки в футере, обязательный чекбокс согласия в форме.
-- Cookie-баннер при первом визите → `localStorage.bp_cookie_consent=true`; Яндекс.Метрика (`useYandexMetrika`, номер из settings) грузится только после согласия.
+- Cookie-баннера **нет**: удалён коммитом `50ec449` как не требуемый по 152-ФЗ (описание cookies остаётся в `/privacy`). Яндекс.Метрика (`useYandexMetrika`, номер из settings, `webvisor: true`) подключается сразу после загрузки настроек, без гейтинга по согласию. Не восстанавливать баннер без решения владельца.
 
 ---
 
@@ -307,7 +307,7 @@ cd client && npm install && npm run dev     # http://localhost:5173 (proxy /api 
 2. Бэкап БД перед рискованными операциями (`better-sqlite3 .backup()` в `/root/db-backups`).
 3. Серверный код: `git pull`, `npm install` в `server/` (**без** `--omit=dev`, нужен `tsx`), `pm2 restart bestpracticeai` (процесс из `ecosystem.config.cjs`, автозапуск `pm2-root.service` + `pm2 save`).
 5. nginx: `/etc/nginx/sites-available/bestpracticeai` (+ `snippets/bp-security.conf` — заголовки безопасности, подключается в каждом location с собственным `add_header`, иначе nginx их не наследует). Хэшированные `/assets/*-XXXXXXXX.js|css` — `Cache-Control: immutable, 1 год`; `public/`-ассеты (fonts/hero/services/…) — 30 дней; SSR-ответы — `no-cache`. Сертификат Let's Encrypt перенесён со старого сервера (`/etc/letsencrypt`), продление — `certbot.timer` (nginx-authenticator).
-6. Express стоит за nginx с `app.set('trust proxy', 1)` — без него rate-limit заявок/логина считает всех посетителей одним IP 127.0.0.1.
+6. Express стоит за nginx с `app.set('trust proxy', 1)` — без него rate-limit заявок/логина считает всех посетителей одним IP 127.0.0.1. Слушает только `HOST` (127.0.0.1 из `ecosystem.config.cjs`), снаружи порт 3001 закрыт и ufw.
 4. Проверки только через `https://bestpracticeai.ru` (на 127.0.0.1 nginx отдаёт 301).
 
 ## 17. ДОСТУПНОСТЬ ИЗ РФ (обязательно к прочтению перед правками nginx / index.html / хостинга)

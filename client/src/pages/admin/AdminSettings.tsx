@@ -5,7 +5,7 @@ import { api } from '../../api/client'
 const SETTINGS_CONFIG = [
   { key: 'hero_video_id', label: 'Kinescope ID для hero-видео', placeholder: 'xmACts9kgZPMEWgLG5sfys', description: 'ID видео на Kinescope.io для отображения в главном блоке' },
   { key: 'notify_email', label: 'Email для уведомлений о заявках', placeholder: 'salinivan@mail.ru', description: 'Адрес получает уведомление при каждой новой заявке' },
-  { key: 'yandex_metrika_id', label: 'Яндекс.Метрика — ID счётчика', placeholder: '12345678', description: 'Загружается только после принятия cookies пользователем' },
+  { key: 'yandex_metrika_id', label: 'Яндекс.Метрика — ID счётчика', placeholder: '12345678', description: 'Подключается на всех публичных страницах сразу после загрузки настроек' },
 ]
 
 export function AdminSettings() {

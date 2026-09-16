@@ -13,7 +13,9 @@ import { servicesRouter } from './routes/services.js'
 import { seoRouter } from './routes/seo.js'
 
 const app = express()
-const PORT = process.env.PORT || 3001
+const PORT = Number(process.env.PORT) || 3001
+// Слушаем только loopback (за nginx); HOST задаётся в ecosystem.config.cjs
+const HOST = process.env.HOST || '127.0.0.1'
 
 // За nginx: брать IP клиента из X-Forwarded-For (первый прокси), иначе express-rate-limit
 // видит 127.0.0.1 у всех и лимиты заявок/логина срабатывают на всех посетителей разом.
@@ -54,8 +56,8 @@ app.get('/health', (req, res) => res.json({ ok: true, env: process.env.NODE_ENV 
 // (nginx проксирует сюда все не-файловые запросы)
 app.use(seoRouter)
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`)
+app.listen(PORT, HOST, () => {
+  console.log(`Server running on http://${HOST}:${PORT}`)
   if (!process.env.ADMIN_PASSWORD_HASH) {
     console.warn('\nWARNING: ADMIN_PASSWORD_HASH not set.')
     console.warn('Run: node server/scripts/create-admin.mjs\n')

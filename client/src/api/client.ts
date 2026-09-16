@@ -108,8 +108,8 @@ export const api = {
     request<{ message: string }>(`/services/admin/${slug}`, { method: 'DELETE' }),
 
   // Admin settings
-  adminUpdateSetting: (key: string, value: string) => {
-    settingsPromise = null
-    return request<{ message: string }>(`/settings/admin/${key}`, { method: 'PUT', body: JSON.stringify({ value }) })
-  },
+  adminUpdateSetting: (key: string, value: string) =>
+    request<{ message: string }>(`/settings/admin/${key}`, { method: 'PUT', body: JSON.stringify({ value }) })
+      // Кэш сбрасываем после завершения записи, чтобы параллельный getSettings не закэшировал старое значение
+      .finally(() => { settingsPromise = null }),
 }

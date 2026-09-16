@@ -41,6 +41,7 @@ export function HeroScrubVideo({ mode, progress }: Props) {
     const url = mode === 'scrub' ? HERO_VIDEO.scrub : HERO_VIDEO.loop
     let cancelled = false
     let objectUrl: string | null = null
+    const controller = new AbortController()
 
     const start = () => {
       if (mode !== 'scrub') {
@@ -50,7 +51,7 @@ export function HeroScrubVideo({ mode, progress }: Props) {
       // Скраб: качаем файл целиком в память и отдаём как blob:. При потоковой загрузке
       // каждый сик в недокачанное место ждёт сеть — при первом заходе кадры «замерзают».
       // Пока качается — остаётся постер; из памяти сики мгновенные. Файл не пережимаем.
-      fetch(url)
+      fetch(url, { signal: controller.signal })
         .then(r => {
           if (!r.ok) throw new Error(`hero video ${r.status}`)
           return r.blob()
@@ -61,7 +62,7 @@ export function HeroScrubVideo({ mode, progress }: Props) {
           setSrc(objectUrl)
         })
         .catch(() => {
-          // Фолбэк — обычная потоковая загрузка
+          // Фолбэк — обычная потоковая загрузка (не при отмене на unmount)
           if (!cancelled) setSrc(url)
         })
     }
@@ -71,6 +72,7 @@ export function HeroScrubVideo({ mode, progress }: Props) {
 
     return () => {
       cancelled = true
+      controller.abort()
       window.removeEventListener('load', start)
       if (objectUrl) URL.revokeObjectURL(objectUrl)
     }
