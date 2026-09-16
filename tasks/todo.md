@@ -94,11 +94,12 @@
 
 - [x] Разведка старого сервера (nginx, pm2 ecosystem, .env-ключи, certbot ECDSA до 2026-10-21, ufw, fail2ban, без swap), нового (чистая Ubuntu, SSH по ключу, smtp.mail.ru:465 доступен), DNS (ns reg.ru, A @/www, TTL 3600)
 - [x] Бэкап БД на старом: `/root/db-backups/pre-selectel-20260916-083623.db` (6 статей, 3 отзыва, 6 заявок, 5 видео, 5 услуг)
-- [ ] Этап 1A (субагент): бутстрап нового сервера — apt, swap, ufw, fail2ban, sshd без паролей, Node 22, nginx, certbot, pm2 startup, clone + npm install
+- [x] Этап 1A (субагент): бутстрап нового сервера — apt, swap, ufw, fail2ban, sshd без паролей, Node 22, nginx, certbot, pm2 startup, clone + npm install
 - [x] Этап 1B (субагент): фронт — lazy admin/ArticlePage/PrivacyPage, vendor-чанки, precompressed gz/br, preload шрифтов/постера, svg-фавикон, дедуп `/api/settings`
 - [x] Этап 1 (я): nginx-конфиг с HTTP/2, gzip_types/gzip_static(+brotli_static), Cache-Control immutable на /assets; деплой-tar без неактивных hero-видео
-- [ ] Этап 2: перенос .env, БД, /etc/letsencrypt через Мак; pm2; dist; nginx; верификация `curl --resolve` + Playwright host-resolver; тест SMTP/заявки
+- [x] Этап 2: перенос .env, БД, /etc/letsencrypt через Мак; pm2; dist; nginx; верификация `curl --resolve` + Playwright host-resolver; тест SMTP/заявки
 - [ ] Этап 0/3: reg.ru API (`~/.regru.env`, IP allowlist) — TTL 300 → финальный снимок БД → старый nginx в прокси на новый → `zone/update_records` → dig → certbot dry-run
 - [ ] Чекпоинт владельца: iPhone МТС LTE и Wi-Fi без VPN
 - [ ] Этап 4: AGENTS.md v2.4, память, lessons, коммит (ecosystem.config.cjs в репо)
   - Итог 1B: главная грузит entry 138 КБ + vendor-react 275 КБ + vendor-motion 166 КБ (≈162 КБ br) вместо одного бандла 834 КБ (255 КБ gz); ArticlePage/admin — отдельные lazy-чанки; 16 .gz + 16 .br в dist/assets. Фавикон оставлен PNG (favicon.svg в public — шаблонный, не бренд). Preload hero-постера срабатывает и на не-главных страницах (30 КБ, безвредно).
+  - Итог этапа 2 (16.09 11:45 MSK): новый сервер отвечает по всем URL идентично старому (статусы 200/301, SSR-разметка, 9 security-заголовков, тот же сертификат до 21.10.2026), JS отдаётся br 35.7 КБ / gzip 42 КБ с `immutable`, HTTP/2; Playwright с host-resolver: главная/услуга/админ без ошибок консоли; тестовая заявка #7 принята, письмо ушло (в логе нет ошибок), строка удалена, заявок снова 6. Попутно: `app.set('trust proxy', 1)` — rate-limit раньше считал всех посетителей 127.0.0.1 (ValidationError в error.log и на старом сервере). Коммит 25f7e1b, на новом сервере HEAD тот же.
