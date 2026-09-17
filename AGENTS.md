@@ -261,7 +261,7 @@ GET  /health · GET /sitemap.xml · SSR: / , /blog/:slug , /services/:slug , /pr
 - Hero-видео подключается после `window load`, до этого постер; на мобильных только loop 720p.
 - Изображения `loading="lazy"`, ассеты webp (карточки услуг 19–50 КБ, подложки 25–30 КБ, иконки 128px ≈10 КБ).
 - Код-сплиттинг (2026-09-16): `React.lazy` для `ServicePage`, `ArticlePage`, `PrivacyPage` и всех `/admin/*`; `manualChunks` в `vite.config.ts` выделяют `vendor-react` и `vendor-motion`. Главная грузит entry ≈138 КБ + vendor-react ≈275 КБ + vendor-motion ≈166 КБ (≈162 КБ brotli суммарно) вместо одного бандла 834 КБ. `vite-plugin-compression2` кладёт `.gz` и `.br` рядом с ассетами — nginx отдаёт их через `gzip_static`/`brotli_static`.
-- `index.html`: preload кириллических `montserrat-cyrillic.woff2`/`lora-cyrillic.woff2` и постера активного hero, preconnect к `mc.yandex.ru`. При смене `ACTIVE_HERO` обновить preload постера.
+- `index.html`: preload кириллических `montserrat-cyrillic.woff2`/`lora-cyrillic.woff2` и постера активного hero, preconnect к `mc.yandex.ru`. При смене `ACTIVE_HERO` обновить preload постера. HTML-комментарии в `index.html` писать можно: при `npm run build` их вырезает плагин `stripHtmlComments` в `vite.config.ts` (в прод не попадают).
 - `/api/settings` запрашивается один раз на страницу (кэш промиса в `api/client.ts`, сбрасывается в `adminUpdateSetting`).
 - Kinescope-iframe только в viewport; фото-подложка секций — один слой без group-opacity.
 

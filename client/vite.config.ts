@@ -2,11 +2,26 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { compression } from 'vite-plugin-compression2'
+import type { Plugin } from 'vite'
+
+// Комментарии в index.html нужны разработчикам, но не посетителям: в проде их вырезаем.
+// Только при build (в dev остаются), после остальных html-трансформаций и до сжатия в .gz/.br.
+function stripHtmlComments(): Plugin {
+  return {
+    name: 'bp-strip-html-comments',
+    apply: 'build',
+    transformIndexHtml: {
+      order: 'post',
+      handler: (html) => html.replace(/^[ \t]*<!--[\s\S]*?-->[ \t]*\r?\n?/gm, '').replace(/<!--[\s\S]*?-->/g, ''),
+    },
+  }
+}
 
 export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
+    stripHtmlComments(),
     // Предсжатые .gz/.br рядом с оригиналами — nginx отдаёт их через gzip_static / brotli_static
     compression({
       include: /\.(js|mjs|css|svg|json|xml|txt|html)$/,
