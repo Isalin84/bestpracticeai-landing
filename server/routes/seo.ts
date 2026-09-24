@@ -185,7 +185,7 @@ seoRouter.get('/', (req, res) => {
 <div style="max-width:1280px;margin:0 auto">
 <header><h1 style="font-size:clamp(36px,5vw,56px);line-height:1.15;margin-bottom:24px">Генеративные нейросети <span style="color:#D4AF37">для бизнеса</span> и частных лиц</h1></header>
 <main>
-<p style="max-width:640px;line-height:1.7;opacity:.85">AI Студия Best Practice: создаём корпоративные ИИ-видео с кастомными аватарами, обучаем работе с нейросетями и разрабатываем цифровые продукты. Эксперт — Иван Салин: 500+ часов видеоконтента, 2 федеральные премии, до 70% экономии на производстве контента.</p>
+<p style="max-width:640px;line-height:1.7;opacity:.85">AI Студия Best Practice: создаём корпоративные ИИ-видео с кастомными аватарами, обучаем работе с нейросетями и разрабатываем цифровые продукты. Эксперт — Иван Салин: 2 федеральные премии, 300+ часов обучения ИИ, средняя оценка тренингов 9,3 из 10, до 70% экономии на производстве контента.</p>
 <section><h2 style="margin:32px 0 12px">Услуги</h2><ul style="line-height:1.9;padding-left:20px">
 ${servicesHtml}
 </ul></section>

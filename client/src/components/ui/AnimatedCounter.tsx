@@ -6,9 +6,11 @@ interface Props {
   suffix?: string
   prefix?: string
   duration?: number
+  /** Знаков после запятой (9,3 → 1); разделитель — запятая, как принято в RU */
+  decimals?: number
 }
 
-export function AnimatedCounter({ target, suffix = '', prefix = '', duration = 1800 }: Props) {
+export function AnimatedCounter({ target, suffix = '', prefix = '', duration = 1800, decimals = 0 }: Props) {
   const [count, setCount] = useState(0)
   const started = useRef(false)
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.3 })
@@ -20,7 +22,7 @@ export function AnimatedCounter({ target, suffix = '', prefix = '', duration = 1
     const step = (now: number) => {
       const progress = Math.min((now - start) / duration, 1)
       const eased = 1 - Math.pow(1 - progress, 3)
-      setCount(Math.round(eased * target))
+      setCount(eased * target)
       if (progress < 1) requestAnimationFrame(step)
     }
     requestAnimationFrame(step)
@@ -28,7 +30,7 @@ export function AnimatedCounter({ target, suffix = '', prefix = '', duration = 1
 
   return (
     <span ref={ref}>
-      {prefix}{count}{suffix}
+      {prefix}{count.toFixed(decimals).replace('.', ',')}{suffix}
     </span>
   )
 }

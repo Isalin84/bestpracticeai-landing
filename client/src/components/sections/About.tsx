@@ -5,10 +5,10 @@ import { DragCarousel } from '../ui/DragCarousel'
 import { Section } from '../ui/Section'
 import { SectionHeading } from '../ui/SectionHeading'
 
-const STATS = [
-  { target: 500, suffix: '+', label: 'часов видеоконтента создано' },
-  { target: 300, suffix: '+', label: 'часов обучения ИИ проведено' },
+const STATS: { target: number; suffix: string; label: string; decimals?: number; unit?: string }[] = [
   { target: 2, suffix: '', label: 'федеральные премии за внедрение ИИ' },
+  { target: 300, suffix: '+', label: 'часов обучения ИИ проведено' },
+  { target: 9.3, suffix: '', decimals: 1, unit: '/ 10', label: 'средняя оценка тренингов участниками' },
   { target: 70, suffix: '%', label: 'экономия на создании контента' },
 ]
 
@@ -101,7 +101,12 @@ export function About() {
                   marginBottom: 8,
                   letterSpacing: '-0.02em',
                 }}>
-                  <AnimatedCounter target={stat.target} suffix={stat.suffix} />
+                  <AnimatedCounter target={stat.target} suffix={stat.suffix} decimals={stat.decimals} />
+                  {stat.unit && (
+                    <span style={{ fontSize: '0.36em', fontWeight: 600, marginLeft: '0.3em', color: 'rgba(212,175,55,0.7)', letterSpacing: 0 }}>
+                      {stat.unit}
+                    </span>
+                  )}
                 </div>
                 {/* Thin gold divider under number */}
                 <div style={{
